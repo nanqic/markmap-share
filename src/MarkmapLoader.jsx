@@ -77,8 +77,9 @@ export default function MarkmapLoader() {
       if (regx.test(text)) {
         text = text.replaceAll(regx, "$& <!-- fold recursively -->")
       } else {
-        text = `# ${decodeURI(currentmark?.replace('.md', ''))} <!-- fold recursively -->\n` + text
+        text = `# ${decodeURI(filename?.replace('.md', ''))} <!-- fold recursively -->\n` + text
       }
+
     }
 
     setText(text)
@@ -100,7 +101,7 @@ export default function MarkmapLoader() {
             })
           }
         </select>
-        <a href="/" target='_self'> 主页</a>
+        <a href="/markmap" target='_self'> 主页</a>
         {
           marks?.map(mark => {
             { currentuser }
