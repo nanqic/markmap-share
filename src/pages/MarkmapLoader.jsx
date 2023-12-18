@@ -15,11 +15,13 @@ export default function MarkmapLoader() {
 
     initData()
   }, [])
+
   const syncLoadMarklist = useSyncCallback(() => {
     loadMarklist(currentuser)
     if (currentmark)
       handleClick(currentmark)
   });
+
   const initData = async () => {
     const dirsUrl = `${src_host}/api/fs/dirs?path=markmap`
     const resp = await postRequest(dirsUrl)
@@ -34,7 +36,7 @@ export default function MarkmapLoader() {
     if (location.hash) {
       let hash = location.hash.slice(1).split('/')
       setCurrentuser(hash[0])
-      setCurrentmark(hash[1])
+      setCurrentmark(hash.slice(1).join('/'))
       syncLoadMarklist()
 
     } else {
