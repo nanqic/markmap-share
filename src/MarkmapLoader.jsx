@@ -9,6 +9,7 @@ export default function MarkmapLoader() {
   const [currentuser, setCurrentuser] = useState()
   const [currentmark, setCurrentmark] = useState()
   const [marks, setMarks] = useState()
+  const [subdirs, setSubdirs] = useState([])
   const [text, setText] = useState()
   const src_host = 'https://box.hdcxb.net'
   useEffect(() => {
@@ -51,7 +52,13 @@ export default function MarkmapLoader() {
       if (file.is_dir) {
         postRequest(`${listUrl}/${user}`)
         const userFiles2 = (await postRequest(`${listUrl}/${user}/${file.name}`))?.data?.content
-        console.log(userFiles2);
+        const markArr2 = []
+        userFiles2.forEach(file2 => {
+          if (file2.name.indexOf('.md') != -1) {
+            markArr2.push(file2.name)
+          }
+        })
+        setSubdirs([...subdirs, { name: file.name, files: markArr2 }])
       }
 
       if (file.name.indexOf('.md') != -1) {
@@ -94,20 +101,41 @@ export default function MarkmapLoader() {
   return (
     <>
       <div className="absolute top-1 left-1">
-        <select onChange={handleChange} value={currentuser} >
+
+        <details open>
+          <summary>
+            <select onChange={handleChange} value={currentuser} >
+              {
+                users?.map(user => {
+                  return <option key={user} value={user}>{user}</option>
+                })
+              }
+            </select>
+            <a href="/" target='_self'> 主页</a>
+          </summary>
           {
-            users?.map(user => {
-              return <option key={user} value={user}>{user}</option>
+            subdirs.map(dir => {
+              return (
+                <details key={dir.name}>
+                  <summary>
+                    <strong> {dir.name}</strong>
+                  </summary>
+                  {dir.files.map(file => {
+                    return <li key={file} className='subdir'>
+                      <a href={`#${currentuser}/${dir.name}/${file}`} onClick={() => handleClick(`${dir.name}/${file}`)}>{file}</a>
+                    </li>
+                  })}
+                </details>
+              )
             })
           }
-        </select>
-        <a href="/markmap" target='_self'> 主页</a>
-        {
-          marks?.map(mark => {
-            { currentuser }
-            return <li key={mark} className={mark == currentmark ? 'under-1' : ''}><a href={`#${currentuser}/${mark}`} onClick={() => handleClick(mark)}>{mark}</a></li>
-          })
-        }
+          {
+            marks?.map(mark => {
+              return <li key={mark} className={mark == currentmark ? 'under-1' : ''}><a href={`#${currentuser}/${mark}`} onClick={() => handleClick(mark)}>{mark}</a></li>
+            })
+          }
+        </details>
+
       </div>
 
       {text &&
