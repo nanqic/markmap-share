@@ -10,10 +10,10 @@ jobs:
     steps:
       # 切换分支
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
       # 使用 node:18
       - name: use Node.js 18
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       # npm install
