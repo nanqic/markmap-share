@@ -1,8 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import MarkmapHooks from './MarkmapHooks'
-import { postRequest, textRequest, useSyncCallback } from './utils'
-import './assets/markmap.css';
+import { postRequest, textRequest, useSyncCallback } from '../utils'
 
 export default function MarkmapLoader() {
   const [users, setUsers] = useState()

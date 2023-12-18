@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { Transformer } from 'markmap-lib';
 import { Markmap } from 'markmap-view';
 import { Toolbar } from 'markmap-toolbar';
-import './assets/markmap.css';
 
 const transformer = new Transformer();
 
