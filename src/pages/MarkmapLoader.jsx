@@ -123,7 +123,7 @@ export default function MarkmapLoader() {
                   </summary>
                   {dir.files.map(file => {
                     return <li key={file} className='subdir'>
-                      <a href={`#${currentuser}/${dir.name}/${file}`} onClick={() => handleClick(`${dir.name}/${file}`)}>{file}</a>
+                      <a href={`#${currentuser}/${dir.name}/${file}`} onClick={() => handleClick(`${dir.name}/${file}`)}>{file.replace('.md','')}</a>
                     </li>
                   })}
                 </details>
@@ -132,7 +132,7 @@ export default function MarkmapLoader() {
           }
           {
             marks?.map(mark => {
-              return <li key={mark} className={mark == currentmark ? 'under-1' : ''}><a href={`#${currentuser}/${mark}`} onClick={() => handleClick(mark)}>{mark}</a></li>
+              return <li key={mark} className={mark == currentmark ? 'under-1' : ''}><a href={`#${currentuser}/${mark}`} onClick={() => handleClick(mark)}>{mark.replace('.md','')}</a></li>
             })
           }
         </details>
