@@ -1,6 +1,5 @@
-# deploy.yml
 name: deploy to vps
-on:
+'on':
   push:
     branches:
       - main
@@ -8,19 +7,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 18
-        - run: npm install
-        - run: npm run build
-      # Deploy
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install
+      - run: npm run build
+      
       - name: Deploy
         uses: easingthemes/ssh-deploy@main
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
-          ARGS: "-avz --delete"
-          SOURCE: "dist/"
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.TARGET }}
+          SSH_PRIVATE_KEY: '${{ secrets.ACCESS_TOKEN }}'
+          ARGS: '-avz --delete'
+          SOURCE: dist/
+          REMOTE_HOST: '${{ secrets.REMOTE_HOST }}'
+          REMOTE_USER: '${{ secrets.REMOTE_USER }}'
+          TARGET: '${{ secrets.TARGET }}'
