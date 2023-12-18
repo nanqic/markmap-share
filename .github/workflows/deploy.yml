@@ -8,24 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 切换分支
-      - name: Checkout
-        uses: actions/checkout@v4
-      # 使用 node:18
-      - name: use Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      # npm install
-      - name: npm install and build
-        run: |
-          npm install
-          npm run build
-        env:
-          CI: true
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 18
+        - run: npm install
+        - run: npm run build
       # Deploy
       - name: Deploy
-        uses: easingthemes/ssh-deploy@v2.0.7
+        uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
           ARGS: "-avz --delete"
