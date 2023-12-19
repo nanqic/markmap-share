@@ -150,7 +150,7 @@ export default function MarkmapLoader() {
 
       {text &&
         <div className="flex flex-col h-screen p-2">
-          <MarkmapHooks text={text} editUrl={`${src_host}/markmap/${currentuser}/${currentmark}`} />
+          <MarkmapHooks text={text} editUrl={`${src_host}/markmap/${currentuser}/${currentmark}.md`} />
         </div>
       }
     </>
