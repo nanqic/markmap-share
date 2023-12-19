@@ -3,24 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-h1,
-p {
-  font-family: Lato;
-}
-
-a {
-  color: green;
-}
-
 li {
   list-style-type: none;
-  padding-left: 10px;
-}
-
-li.subdir {
-  padding-left: 20px;
-}
-
-.under-1 {
-  list-style-type: circle;
 }

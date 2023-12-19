@@ -49,29 +49,34 @@ export default function MarkmapLoader() {
     const listUrl = `${src_host}/api/fs/list?path=markmap`
     const userFiles = (await postRequest(`${listUrl}/${user}`))?.data?.content
     const markArr = []
+    const subdirArr = []
     userFiles.forEach(async file => {
       if (file.is_dir) {
         postRequest(`${listUrl}/${user}`)
         const userFiles2 = (await postRequest(`${listUrl}/${user}/${file.name}`))?.data?.content
         const markArr2 = []
         userFiles2.forEach(file2 => {
-          if (file2.name.indexOf('.md') != -1) {
-            markArr2.push(file2.name)
+          if (filterFile(file2)) {
+            markArr2.push(file2.name.slice(0, -3))
           }
         })
-        setSubdirs([...subdirs, { name: file.name, files: markArr2 }])
+        subdirArr.push({ name: file.name, files: markArr2 })
+        setSubdirs(subdirArr)
       }
 
-      if (file.name.indexOf('.md') != -1) {
-        markArr.push(file.name)
+      if (filterFile(file)) {
+        markArr.push(file.name.slice(0, -3))
       }
+
     })
+
     setMarks(markArr)
   }
 
   const handleClick = async (filename) => {
-    const fileUrl = `${src_host}/d/markmap/${currentuser}/${filename}`
-    let text = await textRequest(fileUrl)
+    const fileUrl = `${src_host}/d/markmap/${currentuser}/${filename}.md`
+    let resp = await textRequest(fileUrl)
+    let text = resp.includes('failed') ? null : resp
     const regx = /#{1,6} \S+/g
 
     setCurrentmark(filename)
@@ -85,7 +90,7 @@ export default function MarkmapLoader() {
       if (regx.test(text)) {
         text = text.replaceAll(regx, "$& <!-- fold recursively -->")
       } else {
-        text = `# ${decodeURI(filename?.replace('.md', ''))} <!-- fold recursively -->\n` + text
+        text = `# ${decodeURI(filename)} <!-- fold recursively -->\n` + text
       }
 
     }
@@ -104,7 +109,7 @@ export default function MarkmapLoader() {
       <div className="absolute top-1 left-1">
 
         <details open>
-          <summary>
+          <summary className='text-green-700'>
             <select onChange={handleChange} value={currentuser} >
               {
                 users?.map(user => {
@@ -118,21 +123,25 @@ export default function MarkmapLoader() {
             subdirs.map(dir => {
               return (
                 <details key={dir.name}>
-                  <summary>
-                    <strong> {dir.name}</strong>
+                  <summary className='pl-2 text-blue-500'>
+                    {dir.name}
                   </summary>
+
                   {dir.files.map(file => {
-                    return <li key={file} className='subdir'>
-                      <a href={`#${currentuser}/${dir.name}/${file}`} onClick={() => handleClick(`${dir.name}/${file}`)}>{file.replace('.md','')}</a>
+
+                    return <li key={file} className={`${dir.name}/${file}` == currentmark ? 'pl-4 text-gray-600' : 'pl-2 text-gray-600'}>
+                      <a href={`#${currentuser}/${dir.name}/${file}`} onClick={() => handleClick(`${dir.name}/${file}`)}>{file}</a>
                     </li>
                   })}
+
                 </details>
               )
             })
           }
           {
             marks?.map(mark => {
-              return <li key={mark} className={mark == currentmark ? 'under-1' : ''}><a href={`#${currentuser}/${mark}`} onClick={() => handleClick(mark)}>{mark.replace('.md','')}</a></li>
+
+              return <li key={mark} className={mark == currentmark ? 'pl-2 text-gray-600' : 'text-gray-600'}><a href={`#${currentuser}/${mark}`} onClick={() => handleClick(mark)}>{mark}</a></li>
             })
           }
         </details>
@@ -146,4 +155,8 @@ export default function MarkmapLoader() {
       }
     </>
   )
+}
+
+function filterFile(file) {
+  return file.name.indexOf('.md') != -1 && !file.name.toLowerCase().includes('readme')
 }
