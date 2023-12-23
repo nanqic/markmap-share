@@ -117,17 +117,11 @@ const MarkmapLoader = () => {
       </div>
       {text &&
         <div className="flex flex-col h-screen p-2">
-          <MarkmapHooks text={text} editUrl={`${src_host}/markmap/${currentuser}/${currentmark}.md`} />
+          <MarkmapHooks text={text} editUrl={`${import.meta.env.VITE_SERVER_URL}/markmap/${state.currentuser}/${state.currentmark}`} />
         </div>
       }
     </>
   )
 }
 
-<<<<<<< HEAD
 export default MarkmapLoader
-=======
-function filterFile(file) {
-  return file.name.indexOf('.md') != -1 && !file.name.toLowerCase().includes('readme')
-}
->>>>>>> 59eef408faf1a0a9fd78f9d77d599243ff69e882
