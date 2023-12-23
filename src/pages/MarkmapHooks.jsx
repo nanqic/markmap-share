@@ -13,18 +13,43 @@ function renderToolbar(mm, wrapper, editUrl) {
         toolbar.attach(mm);
         // Register custom buttons
         toolbar.register({
+            id: 'foldAll',
+            title: '全部展开',
+            content: {
+                vtype: 1,
+                type: 'svg',
+                props: {
+                    children: {
+                        type: 'path',
+                        vtype: 1,
+                        props: {
+                            stroke: 'none',
+                            fill: 'currentColor',
+                            'fill-rule': 'evenodd',
+                            d: 'M16 4h-12v12h12v-8h-8v4h2v-2h4v4h-8v-8h10z',
+                        },
+                    },
+                    height: '20',
+                    viewBox: '0 0 20 20',
+                    width: '20',
+                }
+            },
+            onClick: () => window.open(editUrl),
+        });
+        toolbar.register({
             id: 'edit',
             title: '编辑',
             content: '✍',
             onClick: () => window.open(editUrl),
         });
         // console.log( Toolbar.defaultItems);
-        toolbar.setItems(['zoomIn', 'zoomOut', 'fit', 'edit']);
+        console.log(toolbar);
+        toolbar.setItems(['zoomIn', 'zoomOut', 'fit', 'foldAll', 'edit']);
         wrapper.append(toolbar.render());
     }
 }
 
-export default function MarkmapHooks(props) {
+export default React.memo((props) => {
     // Ref for SVG element
     const refSvg = useRef();
     // Ref for markmap object
@@ -55,4 +80,4 @@ export default function MarkmapHooks(props) {
             <div className="absolute bottom-1 left-1" ref={refToolbar}></div>
         </React.Fragment>
     );
-}
+})

@@ -1,162 +1,127 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useCallback, useReducer, useState } from 'react'
+import { useParams, useLocation } from 'wouter'
 import MarkmapHooks from './MarkmapHooks'
-import { postRequest, textRequest, useSyncCallback } from '../utils'
+import FileTree from './FileTree'
+import { filterFile, postRequest, textRequest } from '../utils'
 
-export default function MarkmapLoader() {
-  const [users, setUsers] = useState()
-  const [currentuser, setCurrentuser] = useState()
-  const [currentmark, setCurrentmark] = useState()
-  const [marks, setMarks] = useState()
-  const [subdirs, setSubdirs] = useState([])
+const MarkmapLoader = () => {
+  const params = useParams();
+  const [location, setLocation] = useLocation();
+
+  // 定义 reducer
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'SET_USERS':
+        return { ...state, users: action.payload };
+      case 'SET_DIRS':
+        return { ...state, dirs: action.payload };
+      case 'SET_DIRFILES':
+        return { ...state, dirfiles: action.payload };
+      case 'SET_CURRENTUSER':
+        return { ...state, currentuser: action.payload };
+      case 'SET_CURRENTFILE':
+      default:
+        return state;
+    }
+  };
+
+  const initialState = {
+    users: null,
+    currentuser: null,
+    currentfile: null,
+    dirs: null,
+    dirfiles: null,
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [text, setText] = useState()
-  const src_host = 'https://box.hdcxb.net'
   useEffect(() => {
 
-    initData()
-  }, [])
+    fetchData()
+  }, [params])
 
-  const syncLoadMarklist = useSyncCallback(() => {
-    loadMarklist(currentuser)
-    if (currentmark)
-      handleClick(currentmark)
-  });
+  const fetchData = async () => {
+    const dirsUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/dirs?path=markmap`
+    const { data } = await postRequest(dirsUrl)
+    const userArr = data.map(item => item.name)
+    dispatch({ type: 'SET_USERS', payload: userArr });
 
-  const initData = async () => {
-    const dirsUrl = `${src_host}/api/fs/dirs?path=markmap`
-    const resp = await postRequest(dirsUrl)
-
-    const userArr = []
-    resp.data.forEach(item => {
-      userArr.push(item.name)
-    })
-    setUsers(userArr)
-    let user01 = userArr[0]
-    // 如果有传hash，读取user和markmap
-    if (location.hash) {
-      let hash = location.hash.slice(1).split('/')
-      setCurrentuser(hash[0])
-      setCurrentmark(hash.slice(1).join('/'))
-      syncLoadMarklist()
-
+    let defaultUser = userArr[0]
+    // path="/@markmap/:username/:dir/:filename"
+    if (params.username) {
+      dispatch({ type: 'SET_CURRENTUSER', payload: params.username })
+      loadUserFiles(params.username)
     } else {
-      setCurrentuser(user01)
-      loadMarklist(user01)
+      dispatch({ type: 'SET_CURRENTUSER', payload: defaultUser })
+      loadUserFiles(defaultUser)
     }
   }
 
-  async function loadMarklist(user) {
-    const listUrl = `${src_host}/api/fs/list?path=markmap`
-    const userFiles = (await postRequest(`${listUrl}/${user}`))?.data?.content
-    const markArr = []
-    const subdirArr = []
-    userFiles.forEach(async file => {
-      if (file.is_dir) {
-        postRequest(`${listUrl}/${user}`)
-        const userFiles2 = (await postRequest(`${listUrl}/${user}/${file.name}`))?.data?.content
-        const markArr2 = []
-        userFiles2.forEach(file2 => {
-          if (filterFile(file2)) {
-            markArr2.push(file2.name.slice(0, -3))
-          }
-        })
-        subdirArr.push({ name: file.name, files: markArr2 })
-        setSubdirs(subdirArr)
-      }
+  async function loadUserFiles(user) {
+    const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`
+    const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content
+    dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) })
 
-      if (filterFile(file)) {
-        markArr.push(file.name.slice(0, -3))
-      }
+    // 加载dir同级md文件
+    if (params.dir?.slice(-3) == '.md') {
+      dispatch({ type: 'SET_CURRENTFILE', payload: params.dir })
+      loadText(params.dir)
 
-    })
+      // 加载dir内的md文件
+    } else if (params.filename) {
+      loadText(`${params.dir}/${params.filename}`)
+    }
 
-    setMarks(markArr)
+    const dirfiles = dirsContent?.filter(file => file.is_dir)?.map(async dir => {
+      const { content } = (await postRequest(`${listUrl}/${user}/${dir.name}`))?.data;
+      const files = content.map(item => item.name.slice(0, -3))
+
+      return new Object({ name: dir.name, files });
+    });
+
+    Promise.all(dirfiles).then(values => {
+      dispatch({ type: 'SET_DIRFILES', payload: values });
+    });
   }
 
-  const handleClick = async (filename) => {
-    const fileUrl = `${src_host}/d/markmap/${currentuser}/${filename}.md`
+  const loadText = async (filename) => {
+    const fileUrl = `${import.meta.env.VITE_SERVER_URL}/d/markmap/${params.username}/${filename}`
     let resp = await textRequest(fileUrl)
-    let text = resp.includes('failed') ? null : resp
-    const regx = /#{1,6} \S+/g
-
-    setCurrentmark(filename)
-    // 优化logseq语法
-    if (text) {
-      text = text.replaceAll('^^', '==')
-      text = text.replaceAll('collapsed:: true', '')
-      text = text.replaceAll(/id:: [\da-z-]+/g, '')
-
-      // 自动折叠节点
-      if (regx.test(text)) {
-        text = text.replaceAll(regx, "$& <!-- fold recursively -->")
-      } else {
-        text = `# ${decodeURI(filename)} <!-- fold recursively -->\n` + text
-      }
-
-    }
-
-    setText(text)
+    setText(resp)
   }
 
-  const handleChange = (e) => {
-    location.hash = `#${e.target.value}`
-    setText()
-    setCurrentuser(e.target.value)
-    loadMarklist(e.target.value);
-  }
+  const handleChangeUser = useCallback((e) => {
+    const { value } = e.target;
+    setLocation(`${import.meta.env.VITE_BASE}/${value}`);
+  }, [setLocation]);
+
   return (
     <>
       <div className="absolute top-1 left-1">
 
         <details open>
           <summary className='text-green-700'>
-            <select onChange={handleChange} value={currentuser} >
+            <select onChange={handleChangeUser} value={params.username}>
               {
-                users?.map(user => {
+                state.users?.map(user => {
                   return <option key={user} value={user}>{user}</option>
                 })
               }
             </select>
             <a href="/" target='_self'> 主页</a>
           </summary>
-          {
-            subdirs.map(dir => {
-              return (
-                <details key={dir.name}>
-                  <summary className='pl-2 text-blue-500'>
-                    {dir.name}
-                  </summary>
-
-                  {dir.files.map(file => {
-
-                    return <li key={file} className={`${dir.name}/${file}` == currentmark ? 'pl-4 text-gray-600' : 'pl-2 text-gray-600'}>
-                      <a href={`#${currentuser}/${dir.name}/${file}`} onClick={() => handleClick(`${dir.name}/${file}`)}>{file}</a>
-                    </li>
-                  })}
-
-                </details>
-              )
-            })
-          }
-          {
-            marks?.map(mark => {
-
-              return <li key={mark} className={mark == currentmark ? 'pl-2 text-gray-600' : 'text-gray-600'}><a href={`#${currentuser}/${mark}`} onClick={() => handleClick(mark)}>{mark}</a></li>
-            })
-          }
+          {state.dirs && <FileTree {...state} />}
         </details>
 
       </div>
-
       {text &&
         <div className="flex flex-col h-screen p-2">
-          <MarkmapHooks text={text} editUrl={`${src_host}/markmap/${currentuser}/${currentmark}`} />
+          <MarkmapHooks text={text} editUrl={`${import.meta.env.VITE_SERVER_URL}/markmap/${state.currentuser}/${state.currentmark}`} />
         </div>
       }
     </>
   )
 }
 
-function filterFile(file) {
-  return file.name.indexOf('.md') != -1 && !file.name.toLowerCase().includes('readme')
-}
+export default MarkmapLoader
