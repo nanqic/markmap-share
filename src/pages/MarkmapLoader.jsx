@@ -1,4 +1,3 @@
-
 import { useEffect, useReducer, useState } from 'react'
 import { useParams, useLocation } from 'wouter'
 import MarkmapHooks from './MarkmapHooks'
@@ -43,7 +42,7 @@ const MarkmapLoader = () => {
   }, [params])
 
   const fetchData = async () => {
-    const dirsUrl = `/api/fs/dirs?path=markmap`
+    const dirsUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/dirs?path=markmap`
     const { data } = await postRequest(dirsUrl)
     const userArr = data.map(item => item.name)
     dispatch({ type: 'SET_USERS', payload: userArr });
@@ -59,7 +58,7 @@ const MarkmapLoader = () => {
   }
 
   async function loadUserFiles(user) {
-    const listUrl = `/api/fs/list?path=markmap`
+    const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`
     const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content
     dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) })
 
@@ -86,7 +85,7 @@ const MarkmapLoader = () => {
   }
 
   const loadText = async (filename) => {
-    const fileUrl = `/p/markmap/${params.username}/${filename}`
+    const fileUrl = `${import.meta.env.VITE_SERVER_URL}/p/markmap/${params.username}/${filename}`
     let resp = await textRequest(fileUrl)
     setText(addTitle(filename, resp))
   }
