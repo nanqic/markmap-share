@@ -5,7 +5,7 @@ export const useSyncCallback = callback => {
 
     const Func = useCallback(() => {
         setProxyState({ current: true })
-    }, [proxyState])
+    }, [])
 
     useEffect(() => {
         if (proxyState.current === true) setProxyState({ current: false })
@@ -18,20 +18,19 @@ export const useSyncCallback = callback => {
     return Func
 }
 
-
 export async function postRequest(url) {
     const resp = await fetch(url, {
         method: 'POST',
     })
-    const json = await resp.json()
-    return json.code != 200 ? null : json
+    const json = await resp?.json()
+    return json?.code != 200 ? null : json
 }
 
 export async function textRequest(url) {
     const resp = await fetch(url)
-    const text = await resp.text()
+    const text = await resp?.text()
 
-    return text.includes('faild') ? null : text
+    return text?.includes('faild') ? null : text
 }
 
 export function filterFile(file) {
@@ -48,14 +47,81 @@ export function adaptLogseq(text) {
     return text
 }
 
-export function foldAll(filename, text) {
+export function addTitle(filename, text) {
     const regx = /#{1,6} \S+/g
 
-    if (regx.test(text)) {
-        text = text.replaceAll(regx, "$& <!-- fold recursively -->")
-    } else {
-        text = `# ${decodeURI(filename)} <!-- fold recursively -->\n` + text
+    if (!regx.test(text)) {
+        return `# ${decodeURI(filename.slice(0, -3))} \n ${text}`
     }
 
     return text
+}
+
+export const foldAll = (mm) => {
+    let mmDataPayload = mm?.state.data.payload;
+    mmDataPayload.fold = !mmDataPayload.fold;
+    mm.renderData();
+    mm.fit();
+}
+
+const foldRecurs = (target) => {
+    target.payload = {
+        ...target.payload,
+        fold: true,
+    }
+
+    target.children?.forEach((t) => {
+        foldRecurs(t)
+    })
+}
+const showLevel = (target, level) => {
+    if (target.state.path.split(".").length - target.state.path.split(".").length >= level - 1) return;
+    target.payload = {
+        ...target.payload,
+        fold: false,
+    }
+
+    target.children?.forEach((t) => {
+        showLevel(t, level)
+    })
+}
+
+export const handleKeyDown = (e, mm) => {
+    const { key } = e
+    let mmDataRoot = mm.state.data;
+    if (key === ".") {
+        foldRecurs(mmDataRoot)
+        mm.renderData();
+        mm.fit();
+    } else if (key === "2") {
+        showLevel(mmDataRoot, 2);
+        mm.renderData();
+        mm.fit();
+    } else if (key === "3") {
+        showLevel(mmDataRoot, 3);
+        mm.renderData();
+        mm.fit();
+    } else if (key === "4") {
+        showLevel(mmDataRoot, 4);
+        mm.renderData();
+        mm.fit();
+    } else if (key === "5") {
+        showLevel(mmDataRoot, 5);
+        mm.renderData();
+        mm.fit();
+    } else if (key === "6") {
+        showLevel(mmDataRoot, 6);
+        mm.renderData();
+        mm.fit();
+    } else if (key === "7") {
+        showLevel(mmDataRoot, 7);
+        mm.renderData();
+        mm.fit();
+    } else if (key === "=") {
+        mm.rescale(1.25);
+    } else if (key === "-") {
+        mm.rescale(0.8);
+    } else if (key === "f" || key == 0) {
+        mm.fit();
+    }
 }

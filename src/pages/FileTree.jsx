@@ -1,17 +1,12 @@
-import React, { useCallback, useEffect } from 'react'
-import { filterFile } from '../utils';
-import { useParams, useLocation } from 'wouter';
+import React, { useCallback } from 'react'
+import { useLocation } from 'wouter';
 
-export default React.memo(
+const FileTree = React.memo(
   (state) => {
-    const [location, setLocation] = useLocation();
-
-    useEffect(() => {
-
-    }, [])
+    const [, setLocation] = useLocation();
     const handleClickFile = useCallback((file) => {
-      
-      setLocation(`${import.meta.env.VITE_BASE}/${state.currentuser || state.users.shift()}/${file}.md`)
+
+      setLocation(`/${state.currentuser || state.users.shift()}/${file}.md`)
     }, [state])
     return (
       <div>
@@ -46,3 +41,6 @@ export default React.memo(
       </div>
     )
   })
+
+FileTree.displayName = 'FileTree';
+export default FileTree;

@@ -1,13 +1,14 @@
 
-import React, { useEffect, useCallback, useReducer, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { useParams, useLocation } from 'wouter'
 import MarkmapHooks from './MarkmapHooks'
 import FileTree from './FileTree'
 import { filterFile, postRequest, textRequest } from '../utils'
+import { addTitle } from '../utils'
 
 const MarkmapLoader = () => {
   const params = useParams();
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
   // 定义 reducer
   const reducer = (state, action) => {
@@ -42,13 +43,12 @@ const MarkmapLoader = () => {
   }, [params])
 
   const fetchData = async () => {
-    const dirsUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/dirs?path=markmap`
+    const dirsUrl = `/api/fs/dirs?path=markmap`
     const { data } = await postRequest(dirsUrl)
     const userArr = data.map(item => item.name)
     dispatch({ type: 'SET_USERS', payload: userArr });
 
     let defaultUser = userArr[0]
-    // path="/@markmap/:username/:dir/:filename"
     if (params.username) {
       dispatch({ type: 'SET_CURRENTUSER', payload: params.username })
       loadUserFiles(params.username)
@@ -59,7 +59,7 @@ const MarkmapLoader = () => {
   }
 
   async function loadUserFiles(user) {
-    const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`
+    const listUrl = `/api/fs/list?path=markmap`
     const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content
     dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) })
 
@@ -74,27 +74,28 @@ const MarkmapLoader = () => {
     }
 
     const dirfiles = dirsContent?.filter(file => file.is_dir)?.map(async dir => {
-      const { content } = (await postRequest(`${listUrl}/${user}/${dir.name}`))?.data;
-      const files = content.map(item => item.name.slice(0, -3))
+      const resp = await postRequest(`${listUrl}/${user}/${dir.name}`)
+      const files = resp?.data.content.map(item => item.name.slice(0, -3))
 
       return new Object({ name: dir.name, files });
     });
 
-    Promise.all(dirfiles).then(values => {
+    dirfiles && Promise.all(dirfiles).then(values => {
       dispatch({ type: 'SET_DIRFILES', payload: values });
     });
   }
 
   const loadText = async (filename) => {
-    const fileUrl = `${import.meta.env.VITE_SERVER_URL}/d/markmap/${params.username}/${filename}`
+    const fileUrl = `/p/markmap/${params.username}/${filename}`
     let resp = await textRequest(fileUrl)
-    setText(resp)
+    setText(addTitle(filename, resp))
   }
 
-  const handleChangeUser = useCallback((e) => {
+  const handleChangeUser = (e) => {
     const { value } = e.target;
-    setLocation(`${import.meta.env.VITE_BASE}/${value}`);
-  }, [setLocation]);
+    setText()
+    setLocation(`/${value}`);
+  }
 
   return (
     <>
@@ -117,7 +118,7 @@ const MarkmapLoader = () => {
       </div>
       {text &&
         <div className="flex flex-col h-screen p-2">
-          <MarkmapHooks text={text} editUrl={`${import.meta.env.VITE_SERVER_URL}/markmap/${state.currentuser}/${state.currentmark}`} />
+          <MarkmapHooks text={text} />
         </div>
       }
     </>

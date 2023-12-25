@@ -6,8 +6,7 @@ function App() {
 
   return (
     <>
-      <Route path="/@markmap/:username?/:dir?/:filename?" component={MarkmapLoader} />
-      <Route>404, Not Found!</Route>
+      <Route path="/:username?/:dir?/:filename?" component={MarkmapLoader} />
     </>
   )
 }
