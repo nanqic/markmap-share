@@ -74,8 +74,9 @@ const foldRecurs = (target) => {
         foldRecurs(t)
     })
 }
+
 const showLevel = (target, level) => {
-    if (target.state.path.split(".").length - target.state.path.split(".").length >= level - 1) return;
+    if (target.state.path.split(".").length >= level) return;
     target.payload = {
         ...target.payload,
         fold: false,
@@ -88,32 +89,39 @@ const showLevel = (target, level) => {
 
 export const handleKeyDown = (e, mm) => {
     const { key } = e
+    // console.log('key:', key);
     let mmDataRoot = mm.state.data;
-    if (key === ".") {
+    if (key === "1" || key === ".") {
         foldRecurs(mmDataRoot)
         mm.renderData();
         mm.fit();
     } else if (key === "2") {
+        foldRecurs(mmDataRoot)
         showLevel(mmDataRoot, 2);
         mm.renderData();
         mm.fit();
     } else if (key === "3") {
+        foldRecurs(mmDataRoot)
         showLevel(mmDataRoot, 3);
         mm.renderData();
         mm.fit();
     } else if (key === "4") {
+        foldRecurs(mmDataRoot)
         showLevel(mmDataRoot, 4);
         mm.renderData();
         mm.fit();
     } else if (key === "5") {
+        foldRecurs(mmDataRoot)
         showLevel(mmDataRoot, 5);
         mm.renderData();
         mm.fit();
     } else if (key === "6") {
+        foldRecurs(mmDataRoot)
         showLevel(mmDataRoot, 6);
         mm.renderData();
         mm.fit();
     } else if (key === "7") {
+        foldRecurs(mmDataRoot)
         showLevel(mmDataRoot, 7);
         mm.renderData();
         mm.fit();
@@ -121,7 +129,9 @@ export const handleKeyDown = (e, mm) => {
         mm.rescale(1.25);
     } else if (key === "-") {
         mm.rescale(0.8);
-    } else if (key === "f" || key == 0) {
+    } else if (key == 0) {
+        mm.fit();
+    } else if (key === "f") {
         mm.fit();
     }
 }

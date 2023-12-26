@@ -93,7 +93,7 @@ const MarkmapLoader = () => {
   const handleChangeUser = (e) => {
     const { value } = e.target;
     setText()
-    setLocation(`/${value}`);
+    setLocation(`${import.meta.env.VITE_BASE_URL}/${value}`);
   }
 
   return (

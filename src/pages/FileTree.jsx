@@ -6,7 +6,7 @@ const FileTree = React.memo(
     const [, setLocation] = useLocation();
     const handleClickFile = useCallback((file) => {
 
-      setLocation(`/${state.currentuser || state.users.shift()}/${file}.md`)
+      setLocation(`${import.meta.env.VITE_BASE_URL}/${state.currentuser || state.users.shift()}/${file}.md`)
     }, [state])
     return (
       <div>
