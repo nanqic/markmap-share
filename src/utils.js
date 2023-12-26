@@ -76,7 +76,6 @@ export const foldRecurs = (target) => {
 }
 
 export const showLevel = (target, level) => {
-    console.log(target.state);
     if (target.state.path?.split(".").length >= level) return;
     target.payload = {
         ...target.payload,
