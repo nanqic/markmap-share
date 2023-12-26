@@ -57,14 +57,14 @@ export function addTitle(filename, text) {
     return text
 }
 
-export const foldAll = (mm) => {
+export const hideSwitch = (mm) => {
     let mmDataPayload = mm?.state.data.payload;
     mmDataPayload.fold = !mmDataPayload.fold;
     mm.renderData();
     mm.fit();
 }
 
-const foldRecurs = (target) => {
+export const foldRecurs = (target) => {
     target.payload = {
         ...target.payload,
         fold: true,
@@ -75,8 +75,9 @@ const foldRecurs = (target) => {
     })
 }
 
-const showLevel = (target, level) => {
-    if (target.state.path.split(".").length >= level) return;
+export const showLevel = (target, level) => {
+    console.log(target.state);
+    if (target.state.path?.split(".").length >= level) return;
     target.payload = {
         ...target.payload,
         fold: false,
