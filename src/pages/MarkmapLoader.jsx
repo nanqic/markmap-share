@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from 'react'
-import { useParams, useLocation } from 'wouter'
+import { useParams, useLocation, Link } from 'wouter'
 import MarkmapHooks from './MarkmapHooks'
 import FileTree from './FileTree'
 import { filterFile, postRequest, textRequest } from '../utils'
@@ -38,50 +38,49 @@ const MarkmapLoader = () => {
   const [text, setText] = useState()
   useEffect(() => {
 
-    fetchData()
+    loadUsers()
+  }, [])
+
+  useEffect(() => {
+    if (params.username) {
+      dispatch({ type: 'SET_CURRENTUSER', payload: params.username })
+      loadUserFiles(params.username)
+    }
   }, [params])
 
-  const fetchData = async () => {
+  const loadUsers = async () => {
+    // fetch users
     const dirsUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/dirs?path=markmap`
     const { data } = await postRequest(dirsUrl)
     const userArr = data.map(item => item.name)
     dispatch({ type: 'SET_USERS', payload: userArr });
 
     let defaultUser = userArr[0]
-    if (params.username) {
-      dispatch({ type: 'SET_CURRENTUSER', payload: params.username })
-      loadUserFiles(params.username)
-    } else {
+    if (!params.username) {
       dispatch({ type: 'SET_CURRENTUSER', payload: defaultUser })
       loadUserFiles(defaultUser)
     }
   }
 
   async function loadUserFiles(user) {
-    const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`
-    const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content
-    dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) })
+    const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`;
+    const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content;
+    dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) });
 
-    // 加载dir同级md文件
     if (params.dir?.slice(-3) == '.md') {
-      dispatch({ type: 'SET_CURRENTFILE', payload: params.dir })
-      loadText(params.dir)
-
-      // 加载dir内的md文件
+      dispatch({ type: 'SET_CURRENTFILE', payload: params.dir });
+      loadText(params.dir);
     } else if (params.filename) {
-      loadText(`${params.dir}/${params.filename}`)
+      loadText(`${params.dir}/${params.filename}`);
     }
 
-    const dirfiles = dirsContent?.filter(file => file.is_dir)?.map(async dir => {
-      const resp = await postRequest(`${listUrl}/${user}/${dir.name}`)
-      const files = resp?.data.content.map(item => item.name.slice(0, -3))
+    const dirfiles = await Promise.all(dirsContent?.filter(file => file.is_dir)?.map(async dir => {
+      const resp = await postRequest(`${listUrl}/${user}/${dir.name}`);
+      const files = resp?.data.content.map(item => item.name.slice(0, -3));
+      return { name: dir.name, files };
+    }));
 
-      return new Object({ name: dir.name, files });
-    });
-
-    dirfiles && Promise.all(dirfiles).then(values => {
-      dispatch({ type: 'SET_DIRFILES', payload: values });
-    });
+    dispatch({ type: 'SET_DIRFILES', payload: dirfiles });
   }
 
   const loadText = async (filename) => {
@@ -90,11 +89,10 @@ const MarkmapLoader = () => {
     setText(addTitle(filename, resp))
   }
 
-  const handleChangeUser = (e) => {
-    const { value } = e.target;
-    setText()
+  const handleChangeUser = ({ target: { value } }) => {
+    setText();
     setLocation(`${import.meta.env.VITE_BASE_URL}/${value}`);
-  }
+  };
 
   return (
     <>
@@ -102,13 +100,14 @@ const MarkmapLoader = () => {
 
         <details open>
           <summary className='text-green-700'>
-            <select onChange={handleChangeUser} value={params.username}>
+            <select onChange={handleChangeUser}>
               {
                 state.users?.map(user => {
                   return <option key={user} value={user}>{user}</option>
                 })
               }
             </select>
+            <Link href='/' onClick={() => setText()}> 🏠</Link>
           </summary>
           {state.dirs && <FileTree {...state} />}
         </details>
