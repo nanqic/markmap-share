@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Transformer } from 'markmap-lib';
 import { Markmap } from 'markmap-view';
 import { Toolbar } from 'markmap-toolbar';
-import { adaptLogseq, hideSwitch, foldRecurs, handleKeyDown, showLevel, toggleFullScreen } from '../utils';
+import { adaptLogseq, foldSwitch, foldRecurs, handleKeyDown, showLevel, toggleFullScreen } from '../utils';
 
 const transformer = new Transformer();
 
@@ -29,7 +29,7 @@ function renderToolbar(mm, wrapper) {
         toolbar.registry.recurse = {
             ...toolbar.registry.recurse,
             title: '折叠/展开',
-            onClick: () => hideSwitch(mm)
+            onClick: () => foldSwitch(mm)
         }
         // console.log( Toolbar.defaultItems);
         toolbar.setItems([...Toolbar.defaultItems, 'full', 'edit']);

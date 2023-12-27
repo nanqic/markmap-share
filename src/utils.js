@@ -41,6 +41,7 @@ export function adaptLogseq(text) {
     // 优化logseq语法
     if (text) {
         text = text.replaceAll('^^', '==')
+        text = text.replaceAll('-->', '➔')
         text = text.replaceAll('collapsed:: true', '')
         text = text.replaceAll(/id:: [\da-z-]+/g, '')
     }
@@ -57,7 +58,7 @@ export function addTitle(filename, text) {
     return text
 }
 
-export const hideSwitch = (mm) => {
+export const foldSwitch = (mm) => {
     let mmDataPayload = mm?.state.data.payload;
     mmDataPayload.fold = !mmDataPayload.fold;
     mm.renderData();
@@ -100,7 +101,7 @@ export const showLevel = (target, level) => {
 
 export const handleKeyDown = (e, mm) => {
     const { key } = e
-    // console.log('key:', key);
+    console.log('key:', key);
     let mmDataRoot = mm.state.data;
 
     switch (key) {
@@ -121,14 +122,16 @@ export const handleKeyDown = (e, mm) => {
             showLevel(mmDataRoot, parseInt(key));
             break;
         case "=":
+        case "+":
             mm.rescale(1.25);
-            break;
+            return;
         case "-":
             mm.rescale(0.8);
-            break;
+
+            return;
         case '9':
-            hideSwitch(mm);
-            break;
+            foldSwitch(mm);
+            return;
         case "0":
         case "space":
             mm.fit();
@@ -144,11 +147,10 @@ export const handleKeyDown = (e, mm) => {
 
 export function toggleFullScreen() {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
+        document.documentElement.requestFullscreen();
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
     }
-  }
-  
+}
