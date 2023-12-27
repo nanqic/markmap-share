@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      <Route path="/@markmap/:username?/:dir?/:filename?" component={MarkmapLoader} />
+      <Route path={`${import.meta.env.VITE_BASE_URL}/:username?/:dir?/:filename?`} component={MarkmapLoader} />
     </>
   )
 }
