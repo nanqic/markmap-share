@@ -9,20 +9,55 @@
 ## 部署
 - `npm run build`
 
+## 快捷键
+- `0` or `space`: fit window in center in case you move or zoom it.
+- `9`: show all. / hide all except the central one.
+- `1`~`7`: expand to level 1~7.
+- `+`: zoom in.
+- `-`: zoom out.
+- `.`: collapse all to level 1.
+- `,`: reset to original tree.
+<!-- - `h`: level up.
+- `l`: level down.
+- `j`: expand step by step.
+- `k`: collapse step by step.
+- `n`: focus to next sibling.
+- `p`: focus to previous sibling.
+- `UP`: move mindmap up.
+- `DOWN`: move mindmap down.
+- `LEFT`: move mindmap left.
+- `RIGHT`: move mindmap right.
+- `cmd+[`: go backward.
+- `cmd+]`: go forward.
+- `/`: popup keybindings help model. -->
+
 ## caddy配置
 ``` Caddyfile
 box.hdcxb.net {
         encode gzip zstd
 
         handle_path /@markmap* {
-                root * /home/ubuntu/markmap-loader/dist
+                root * /home/ubuntu/mml
+                try_files {path} /
                 file_server
         }
-        handle_path /* {
-                reverse_proxy 127.0.0.1:5244 {
-                        header_up Host {http.reverse_proxy.upstream.hostport}
-                        header_down Access-Control-Allow-Headers *
-                        header_down Access-Control-Allow-Origin *
+}
+```
+## nginx配置
+``` nginx
+server {
+        listen 8080;
+
+        server_name localhost;
+        #root /var/www/html;
+
+        location ^~/@markmap {
+                alias /home/ubuntu/markmap-loader/dist;
+                try_files $uri $uri/ /@markmap/index.html;
+                index index.html;
+                location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                        expires max;
+                        log_not_found off;
                 }
         }
 }

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Transformer } from 'markmap-lib';
 import { Markmap } from 'markmap-view';
 import { Toolbar } from 'markmap-toolbar';
-import { adaptLogseq, hideSwitch, foldRecurs, handleKeyDown, showLevel } from '../utils';
+import { adaptLogseq, hideSwitch, foldRecurs, handleKeyDown, showLevel, toggleFullScreen } from '../utils';
 
 const transformer = new Transformer();
 
@@ -18,7 +18,13 @@ function renderToolbar(mm, wrapper) {
             id: 'edit',
             title: '编辑',
             content: '✍',
-            onClick: () => window.open(`/markmap${location.pathname}`),
+            onClick: () => window.open(`${import.meta.env.VITE_SERVER_URL}/${location.pathname.slice(2)}`),
+        });
+        toolbar.register({
+            id: 'full',
+            title: '全屏',
+            content: '⭕',
+            onClick: () => toggleFullScreen(),
         });
         toolbar.registry.recurse = {
             ...toolbar.registry.recurse,
@@ -26,7 +32,7 @@ function renderToolbar(mm, wrapper) {
             onClick: () => hideSwitch(mm)
         }
         // console.log( Toolbar.defaultItems);
-        toolbar.setItems([...Toolbar.defaultItems, 'edit']);
+        toolbar.setItems([...Toolbar.defaultItems, 'full', 'edit']);
         wrapper.append(toolbar.render());
     }
 }

@@ -75,6 +75,17 @@ export const foldRecurs = (target) => {
     })
 }
 
+export const unfoldRecurs = (target) => {
+    target.payload = {
+        ...target.payload,
+        fold: false,
+    }
+
+    target.children?.forEach((t) => {
+        unfoldRecurs(t)
+    })
+}
+
 export const showLevel = (target, level) => {
     if (target.state.path?.split(".").length >= level) return;
     target.payload = {
@@ -91,47 +102,53 @@ export const handleKeyDown = (e, mm) => {
     const { key } = e
     // console.log('key:', key);
     let mmDataRoot = mm.state.data;
-    if (key === "1" || key === ".") {
-        foldRecurs(mmDataRoot)
-        mm.renderData();
-        mm.fit();
-    } else if (key === "2") {
-        foldRecurs(mmDataRoot)
-        showLevel(mmDataRoot, 2);
-        mm.renderData();
-        mm.fit();
-    } else if (key === "3") {
-        foldRecurs(mmDataRoot)
-        showLevel(mmDataRoot, 3);
-        mm.renderData();
-        mm.fit();
-    } else if (key === "4") {
-        foldRecurs(mmDataRoot)
-        showLevel(mmDataRoot, 4);
-        mm.renderData();
-        mm.fit();
-    } else if (key === "5") {
-        foldRecurs(mmDataRoot)
-        showLevel(mmDataRoot, 5);
-        mm.renderData();
-        mm.fit();
-    } else if (key === "6") {
-        foldRecurs(mmDataRoot)
-        showLevel(mmDataRoot, 6);
-        mm.renderData();
-        mm.fit();
-    } else if (key === "7") {
-        foldRecurs(mmDataRoot)
-        showLevel(mmDataRoot, 7);
-        mm.renderData();
-        mm.fit();
-    } else if (key === "=") {
-        mm.rescale(1.25);
-    } else if (key === "-") {
-        mm.rescale(0.8);
-    } else if (key == 0) {
-        mm.fit();
-    } else if (key === "f") {
-        mm.fit();
+
+    switch (key) {
+        case ",":
+            unfoldRecurs(mmDataRoot);
+            break;
+        case "1":
+        case ".":
+            foldRecurs(mmDataRoot);
+            break;
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+            foldRecurs(mmDataRoot);
+            showLevel(mmDataRoot, parseInt(key));
+            break;
+        case "=":
+            mm.rescale(1.25);
+            break;
+        case "-":
+            mm.rescale(0.8);
+            break;
+        case '9':
+            hideSwitch(mm);
+            break;
+        case "0":
+        case "space":
+            mm.fit();
+            break;
+        default:
+            // Handle default case if needed
+            break;
     }
+
+    mm.renderData();
+    mm.fit();
 }
+
+export function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+  

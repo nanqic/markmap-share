@@ -109,7 +109,6 @@ const MarkmapLoader = () => {
                 })
               }
             </select>
-            <a href="/" target='_self'> 主页</a>
           </summary>
           {state.dirs && <FileTree {...state} />}
         </details>
