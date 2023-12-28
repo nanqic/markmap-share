@@ -106,7 +106,7 @@ const MarkmapLoader = () => {
                 })
               }
             </select>
-            <Link href={`${import.meta.env.VITE_BASE_URL}`} onClick={() => setText()}> 🏠</Link>
+            <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`} onClick={() => setText()}> 🏠</Link>
           </summary>
           {state.dirs && <FileTree {...state} />}
         </details>
