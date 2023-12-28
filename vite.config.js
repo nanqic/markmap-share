@@ -18,7 +18,7 @@ export default ({ mode }) => {
         // 打包完成后自动打开浏览器，显示产物体积报告
         open: false,
       }),],
-    base: BASE_URL,
+    base: BASE_URL||'/',
     resolve: {
       alias: {
         '@': resolve('./src'),
