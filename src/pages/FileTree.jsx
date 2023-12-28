@@ -19,7 +19,7 @@ const FileTree = React.memo(
                 </summary>
                 {dir.files?.map(file => {
                   { file }
-                  return <li key={file} className={`${file}` == state.currentfile ? 'pl-4 text-gray-600' : 'pl-2 text-gray-600'}
+                  return <li key={file} className={`${file}` == state.currentfile ? 'pl-4 text-gray-600' : 'pl-2 text-gray-500'}
                     onClick={() => handleClickFile(`${dir.name}/${file}`)}>
                     {file}
                   </li>

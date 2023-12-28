@@ -95,7 +95,7 @@ const MarkmapLoader = () => {
 
   return (
     <>
-      <div className="absolute top-1 left-1">
+      <div className="absolute top-1 left-1 opacity-80">
 
         <details open>
           <summary className='text-green-700'>
