@@ -3,6 +3,17 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-color: wheat;
+}
+
+.markmap-foreign div:not(:empty) {
+  padding: 3px;
+  border: groove .1em red;
+  border-radius: .5em;
+  background-color: antiquewhite;
+}
+
 li {
   list-style-type: none;
 }

@@ -48,16 +48,6 @@ export function adaptLogseq(text) {
     return text
 }
 
-export function addTitle(filename, text) {
-    const regx = /#{1,6} \S+/g
-
-    if (!regx.test(text)) {
-        return `# ${decodeURI(filename.slice(0, -3))} \n ${text}`
-    }
-
-    return text
-}
-
 export const foldSwitch = (mm) => {
     let mmDataPayload = mm?.state.data.payload;
     mmDataPayload.fold = !mmDataPayload.fold;
@@ -101,7 +91,7 @@ export const showLevel = (target, level) => {
 
 export const handleKeyDown = (e, mm) => {
     const { key } = e
-    console.log('key:', key);
+    // console.log('key:', key);
     let mmDataRoot = mm.state.data;
 
     switch (key) {
@@ -143,6 +133,15 @@ export const handleKeyDown = (e, mm) => {
 
     mm.renderData();
     mm.fit();
+}
+
+export const initMarkmapOptions = (mm, root) => {
+    mm.options.maxWidth = 600
+    // mm.options.autoFit = true
+    mm.options.initialExpandLevel = 2
+    if (!root.content) {
+        root.content = decodeURI(location.pathname.split('/').pop().slice(0, -3));
+    }
 }
 
 export function toggleFullScreen() {

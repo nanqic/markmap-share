@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Transformer } from 'markmap-lib';
 import { Markmap } from 'markmap-view';
 import { Toolbar } from 'markmap-toolbar';
-import { adaptLogseq, foldSwitch, foldRecurs, handleKeyDown, showLevel, toggleFullScreen } from '../utils';
+import { adaptLogseq, foldSwitch,  handleKeyDown,  toggleFullScreen, initMarkmapOptions } from '../utils';
 
 const transformer = new Transformer();
 
@@ -18,7 +18,7 @@ function renderToolbar(mm, wrapper) {
             id: 'edit',
             title: '编辑',
             content: '✍',
-            onClick: () => window.open(`${import.meta.env.VITE_SERVER_URL}/${location.pathname.slice(2)}`),
+            onClick: () => window.open(`${import.meta.env.VITE_SERVER_URL}/markmap${location.pathname.replace("/@markmap", "")}`),
         });
         toolbar.register({
             id: 'full',
@@ -57,9 +57,8 @@ const MarkmapHooks = React.memo((props) => {
         const mm = refMm.current;
         if (!mm) return;
         const { root } = transformer.transform(adaptLogseq(props.text));
+        initMarkmapOptions(mm, root)
         mm.setData(root);
-        foldRecurs(mm.state.data)
-        showLevel(mm.state.data, 2)
         mm.renderData();
         mm.fit();
         // 组件挂载时添加事件监听器

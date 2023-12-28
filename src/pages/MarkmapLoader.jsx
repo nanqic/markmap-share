@@ -3,7 +3,6 @@ import { useParams, useLocation, Link } from 'wouter'
 import MarkmapHooks from './MarkmapHooks'
 import FileTree from './FileTree'
 import { filterFile, postRequest, textRequest } from '../utils'
-import { addTitle } from '../utils'
 
 const MarkmapLoader = () => {
   const params = useParams();
@@ -28,7 +27,7 @@ const MarkmapLoader = () => {
 
   const initialState = {
     users: null,
-    currentuser: null,
+    currentuser: '',
     currentfile: null,
     dirs: null,
     dirfiles: null,
@@ -86,7 +85,7 @@ const MarkmapLoader = () => {
   const loadText = async (filename) => {
     const fileUrl = `${import.meta.env.VITE_SERVER_URL}/p/markmap/${params.username}/${filename}`
     let resp = await textRequest(fileUrl)
-    setText(addTitle(filename, resp))
+    setText(resp)
   }
 
   const handleChangeUser = ({ target: { value } }) => {
@@ -100,7 +99,7 @@ const MarkmapLoader = () => {
 
         <details open>
           <summary className='text-green-700'>
-            <select onChange={handleChangeUser}>
+            <select onChange={handleChangeUser} value={state.currentuser}>
               {
                 state.users?.map(user => {
                   return <option key={user} value={user}>{user}</option>
