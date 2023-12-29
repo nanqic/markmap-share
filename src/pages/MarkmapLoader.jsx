@@ -1,8 +1,9 @@
-import { useEffect, useReducer, useState } from 'react'
+import { lazy, useEffect, useReducer, useState } from 'react'
 import { useParams, useLocation, Link } from 'wouter'
-import MarkmapHooks from './MarkmapHooks'
 import FileTree from './FileTree'
 import { filterFile, postRequest, textRequest } from '../utils'
+
+const MarkmapHooks = lazy(() => import("./MarkmapHooks"))
 
 const MarkmapLoader = () => {
   const params = useParams();
