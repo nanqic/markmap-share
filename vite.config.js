@@ -22,7 +22,7 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': resolve('./src'),
-        // 'assets': resolve('./src/assets'),
+        'assets': resolve('./src/assets'),
       }
     },
     server: {

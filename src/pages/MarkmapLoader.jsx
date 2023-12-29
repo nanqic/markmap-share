@@ -37,6 +37,9 @@ const MarkmapLoader = () => {
   const [text, setText] = useState()
   useEffect(() => {
 
+    if (localStorage.getItem("theme")) {
+      import(`assets/theme-wheat.css`)
+    }
     loadUsers()
   }, [])
 
@@ -92,6 +95,16 @@ const MarkmapLoader = () => {
     setText();
     setLocation(`${import.meta.env.VITE_BASE_URL}/${value}`);
   };
+  const changeTheme = () => {
+    if (!localStorage.getItem("theme")) {
+      localStorage.setItem("theme", "wheat")
+      import(`assets/theme-wheat.css`)
+    } else {
+      localStorage.removeItem("theme")
+      location.reload()
+    }
+
+  };
 
   return (
     <>
@@ -107,6 +120,7 @@ const MarkmapLoader = () => {
               }
             </select>
             <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`} onClick={() => setText()}> 🏠</Link>
+            <button onClick={changeTheme} className='p-2 m-1'></button>
           </summary>
           {state.dirs && <FileTree {...state} />}
         </details>
