@@ -24,8 +24,7 @@ jobs:
       - name: Upload dist to server
         uses: easingthemes/ssh-deploy@main
         with:
-          SSH_PRIVATE_KEY: '${{ secrets.ACCESS_TOKEN }}'
-          ARGS: '-avz --delete'
+          SSH_PRIVATE_KEY: '${{ secrets.SSH_PRIVATE_KEY }}'
           SOURCE: dist/
           REMOTE_HOST: '${{ secrets.REMOTE_HOST }}'
           REMOTE_USER: '${{ secrets.REMOTE_USER }}'
