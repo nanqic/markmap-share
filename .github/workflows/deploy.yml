@@ -8,18 +8,20 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout dist repo
-        uses: actions/checkout@v4
+      # - name: Checkout dist repo
+      #   uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 18
           
       - name: Build
         run: |
-          npm install
-          npm run build
+          # npm install
+          # npm run build
+          mkdir dist
+          ls
       
       - name: Upload dist to server
         uses: easingthemes/ssh-deploy@main
