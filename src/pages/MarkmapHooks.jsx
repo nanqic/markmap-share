@@ -36,6 +36,7 @@ function renderToolbar(mm, wrapper) {
                 copyLink()
             },
         });
+
         toolbar.registry.recurse = {
             ...toolbar.registry.recurse,
             title: '折叠/展开',
@@ -85,7 +86,7 @@ const MarkmapHooks = React.memo((props) => {
     return (
         <React.Fragment>
             <svg className="flex-1" ref={refSvg} />
-            <div className="absolute bottom-1 left-1" ref={refToolbar}>
+            <div className="absolute bottom-1 left-1 cursor-pointer" ref={refToolbar}>
             </div>
             <dialog open={false}>
                 <div className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-3 py-2 shadow-md" role="alert">
