@@ -153,3 +153,28 @@ export function toggleFullScreen() {
         }
     }
 }
+
+export async function copyTextToClipboard(text) {
+    if ('clipboard' in navigator) {
+        return await navigator.clipboard.writeText(text);
+    } else {
+        return document.execCommand('copy', true, text);
+    }
+}
+
+export const copyLink = () => {
+    let rawUrl = location.href
+    fetch(`${import.meta.env.VITE_YOURLS_API}${rawUrl}`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            if (json.statusCode == 200 || json.statusCode == 400) {
+                rawUrl = json.shorturl
+            }
+        })
+        .catch((err) => {
+            console.error('YOURLS_API err', err)
+        })
+        .finally(() => {
+            copyTextToClipboard(rawUrl)
+        })
+}

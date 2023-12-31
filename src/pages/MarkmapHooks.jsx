@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Transformer } from 'markmap-lib';
 import { Markmap } from 'markmap-view';
 import { Toolbar } from 'markmap-toolbar';
-import { adaptLogseq, foldSwitch,  handleKeyDown,  toggleFullScreen, initMarkmapOptions } from '../utils';
+import { adaptLogseq, foldSwitch, handleKeyDown, toggleFullScreen, initMarkmapOptions, copyLink } from '../utils';
 
 const transformer = new Transformer();
 
@@ -20,11 +20,21 @@ function renderToolbar(mm, wrapper) {
             content: '✍',
             onClick: () => window.open(`${import.meta.env.VITE_SERVER_URL}/markmap${location.pathname.replace("/@markmap", "")}`),
         });
+
         toolbar.register({
             id: 'full',
             title: '全屏',
             content: '⭕',
             onClick: () => toggleFullScreen(),
+        });
+
+        toolbar.register({
+            id: 'copyLink',
+            title: '复制链接',
+            content: '🔗',
+            onClick: () => {
+                copyLink()
+            },
         });
         toolbar.registry.recurse = {
             ...toolbar.registry.recurse,
@@ -32,7 +42,7 @@ function renderToolbar(mm, wrapper) {
             onClick: () => foldSwitch(mm)
         }
         // console.log( Toolbar.defaultItems);
-        toolbar.setItems([...Toolbar.defaultItems, 'full', 'edit']);
+        toolbar.setItems([...Toolbar.defaultItems, 'full', 'edit', 'copyLink']);
         wrapper.append(toolbar.render());
     }
 }
@@ -75,7 +85,13 @@ const MarkmapHooks = React.memo((props) => {
     return (
         <React.Fragment>
             <svg className="flex-1" ref={refSvg} />
-            <div className="absolute bottom-1 left-1" ref={refToolbar}></div>
+            <div className="absolute bottom-1 left-1" ref={refToolbar}>
+            </div>
+            <dialog open={false}>
+                <div className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-3 py-2 shadow-md" role="alert">
+                    <div className="py-1 flex"><svg className="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" /></svg> 已复制</div>
+                </div>
+            </dialog>
         </React.Fragment>
     );
 })
