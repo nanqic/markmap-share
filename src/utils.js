@@ -48,7 +48,7 @@ export function adaptLogseq(text) {
     return text
 }
 
-export const foldSwitch = (mm) => {
+export const hideAll = (mm) => {
     let mmDataPayload = mm?.state.data.payload;
     mmDataPayload.fold = !mmDataPayload.fold;
     mm.renderData();
@@ -87,52 +87,6 @@ export const showLevel = (target, level) => {
     target.children?.forEach((t) => {
         showLevel(t, level)
     })
-}
-
-export const handleKeyDown = (e, mm) => {
-    const { key } = e
-    // console.log('key:', key);
-    let mmDataRoot = mm.state.data;
-
-    switch (key) {
-        case ",":
-            unfoldRecurs(mmDataRoot);
-            break;
-        case "1":
-        case ".":
-            foldRecurs(mmDataRoot);
-            break;
-        case "2":
-        case "3":
-        case "4":
-        case "5":
-        case "6":
-        case "7":
-            foldRecurs(mmDataRoot);
-            showLevel(mmDataRoot, parseInt(key));
-            break;
-        case "=":
-        case "+":
-            mm.rescale(1.25);
-            return;
-        case "-":
-            mm.rescale(0.8);
-
-            return;
-        case '9':
-            foldSwitch(mm);
-            return;
-        case "0":
-        case "space":
-            mm.fit();
-            break;
-        default:
-            // Handle default case if needed
-            break;
-    }
-
-    mm.renderData();
-    mm.fit();
 }
 
 export const initMarkmapOptions = (mm, root) => {
@@ -177,4 +131,8 @@ export const copyLink = () => {
         .finally(() => {
             copyTextToClipboard(rawUrl)
         })
+}
+
+export const sortByFirstNum = (a, b) => {
+    return parseInt(a.split('-')[0]) - parseInt(b.split('-')[0])
 }

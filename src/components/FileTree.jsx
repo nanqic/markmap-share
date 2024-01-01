@@ -1,25 +1,26 @@
 import React, { useCallback } from 'react'
 import { useLocation } from 'wouter';
+import { sortByFirstNum } from '../utils';
 
 const FileTree = React.memo(
   (state) => {
+
     const [, setLocation] = useLocation();
     const handleClickFile = useCallback((file) => {
-
-      setLocation(`${import.meta.env.VITE_BASE_URL}/${state.currentuser || state.users.shift()}/${file}.md`)
+      setLocation(`${import.meta.env.VITE_BASE_URL}/${state.username || state.userlist.shift()}/${file}.md`)
     }, [state])
     return (
-      <div>
+      <div className='text-gray-600 group inline-block'>
         {
-          state.dirfiles?.map(dir => {
+          state.dirfiles?.sort((a, b) => a.name.split('-')[0] - b.name.split('-')[0]).map(dir => {
             return (
-              <details key={dir.name}>
-                <summary className='pl-2 text-blue-500'>
+              <details className='pl-3' key={dir.name} open={decodeURI(location.pathname).includes(dir.name)}>
+                <summary className='text-blue-500'>
                   {dir.name}
                 </summary>
-                {dir.files?.map(file => {
+                {dir.files?.sort(sortByFirstNum).map(file => {
                   { file }
-                  return <li key={file} className={`${file}` == state.currentfile ? 'pl-4 text-gray-600' : 'pl-2 text-gray-500'}
+                  return <li key={file} className={decodeURI(location.pathname).includes(file) ? 'bg-red-50 px-2 inline-block' : ''}
                     onClick={() => handleClickFile(`${dir.name}/${file}`)}>
                     {file}
                   </li>
@@ -30,9 +31,9 @@ const FileTree = React.memo(
           })
         }
         {
-          state.dirs?.map(file => {
+          state.dirs?.sort(sortByFirstNum).map(file => {
             return (
-              <li key={file} className={file == state.currentfile ? 'pl-2 text-gray-600' : 'text-gray-600'} onClick={() => handleClickFile(file)}>
+              <li key={file} className={decodeURI(location.pathname).includes(file) ? 'bg-red-50 px-2' : ''} onClick={() => handleClickFile(file)}>
                 {file}
               </li>
             )

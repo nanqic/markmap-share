@@ -6,8 +6,8 @@ const NotificationContext = createContext();
 export const NotificationProvider = ({ duration, children }) => {
   const [notification, setNotification] = useState(null);
 
-  const showNotification = (title, text) => {
-    setNotification({ title, text });
+  const showNotification = (text) => {
+    setNotification(text);
 
     setTimeout(() => {
       setNotification(null);
@@ -17,7 +17,7 @@ export const NotificationProvider = ({ duration, children }) => {
   return (
     <NotificationContext.Provider value={showNotification}>
       {children}
-      {notification && <Notification title={notification.title} text={notification.text} />}
+      {notification && <Notification text={notification} />}
     </NotificationContext.Provider>
   );
 };
