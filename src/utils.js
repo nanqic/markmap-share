@@ -98,11 +98,13 @@ export const initMarkmapOptions = (mm, root) => {
     }
 }
 
-export function toggleFullScreen() {
+export function toggleFullScreen(setShow) {
     if (!document.fullscreenElement) {
+        setShow(false)
         document.documentElement.requestFullscreen();
     } else {
         if (document.exitFullscreen) {
+            setShow(true)
             document.exitFullscreen();
         }
     }
