@@ -65,3 +65,17 @@ server {
         }
 }
 ```
+
+## 特别鸣谢
+- Oracle cloud 
+- Alist org
+- cloudflare
+- logseq-plugin-mark-map
+- blogcdn
+- netlify app
+- appleboy
+- chatgpt
+- markmap
+- react
+- wouter
+- tailwindcss
