@@ -79,3 +79,4 @@ server {
 - react
 - wouter
 - tailwindcss
+- YOURLS

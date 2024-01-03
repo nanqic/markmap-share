@@ -1,35 +1,52 @@
-import { lazy, useState, useEffect } from 'react'
+import { lazy, useRef, useEffect, useState } from 'react'
+import { useDebounce } from '../utils'
 
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 
 export default function Raw() {
-    const [text, setText] = useState()
-    const [hide, setHide] = useState(false)
+    const textRef = useRef();
+    const [show, setShow] = useState(true);
+    const [content, setContent] = useState();
+    const [isVertical, setIsVertical] = useState(screen.orientation?.type.includes("portrait"))
+    const handleChange = useDebounce(({ target: { value } }) => {
+        localStorage.setItem("raw-content", value);
+        setContent(value)
+    }, 1000)
 
-
-    const handleChange = ({ target: { value } }) => {
-        setText(value)
-        localStorage.setItem("raw-content", value)
+    const handleOrientationChange = () => {
+        setIsVertical(screen.orientation?.type.includes("portrait"))
     }
-
     useEffect(() => {
-        let content = localStorage.getItem("raw-content")
-        if (content) {
-            setText(content)
+        let cachedContent = localStorage.getItem("raw-content");
+        if (!cachedContent) {
+            cachedContent = `# 学习\n\n## 学习方法\n- 主动学习\n- 高效学习\n- 深度学习\n\n## 学习计划\n- 设定目标\n- 制定计划\n- 实施反馈\n\n## 学习态度\n- 主动积极\n- 持续专注\n- 坚持不懈\n`
+            localStorage.setItem("raw-content", cachedContent);
         }
-    }, [text])
+        setContent(cachedContent)
+        // 添加事件监听器
+        window.addEventListener('orientationchange', handleOrientationChange);
+
+        // 在组件卸载时移除事件监听器
+        return () => {
+            window.removeEventListener('orientationchange', handleOrientationChange);
+        };
+    }, [isVertical]);
 
     return (
         <div className="flex flex-row h-screen p-2 text-sm">
-            <button className="absolute top-2 left-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                onClick={() => setHide(!hide)}>{hide ? '显示' : '隐藏'}编辑</button>
-            <div className={hide ? 'hidden' : 'w-1/3'}>
-
-                <textarea className="pt-7 h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded" value={text} onChange={handleChange} ></textarea>
+            <div className={`bg-red-500 text-white p-4 ${isVertical ? 'block' : 'hidden'} fixed top-0 left-0 w-full text-center`}>
+                请切换到横屏以获得最佳体验
+            </div>
+            <div className={show ? 'w-2/3' : 'hidden'}>
+                <textarea ref={textRef} className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
+                    onChange={handleChange
+                    }
+                    defaultValue={localStorage.getItem("raw-content")}
+                ></textarea>
             </div>
             <div className="w-full flex">
-                {text && <MarkmapHooks text={text} />}
+                {content && <MarkmapHooks text={content} setShow={setShow} show={show} edit={true} />}
             </div>
         </div>
-    )
+    );
 }

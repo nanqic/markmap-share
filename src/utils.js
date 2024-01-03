@@ -91,6 +91,7 @@ export const showLevel = (target, level) => {
 
 export const initMarkmapOptions = (mm, root) => {
     mm.options.maxWidth = 600
+    mm.options.duration = 100
     // mm.options.autoFit = true
     mm.options.initialExpandLevel = 2
     if (!root.content) {
@@ -137,4 +138,14 @@ export const copyLink = () => {
 
 export const sortByFirstNum = (a, b) => {
     return parseInt(a.split('-')[0]) - parseInt(b.split('-')[0])
+}
+
+export function useDebounce(fn, wait) {
+    let timer = null
+    return (...args) => {
+        if (timer) {
+            clearTimeout(timer)
+        }
+        timer = setTimeout(() => fn(...args), wait)
+    }
 }

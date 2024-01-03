@@ -20,28 +20,10 @@ function renderToolbar(mm, wrapper) {
             title: '编辑',
             content: Toolbar.icon('M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'),
             onClick: () => {
-                let basePath = `${import.meta.env.VITE_SERVER_URL}/markmap`
-                if (localStorage.getItem("token")) {
-                    fetch("/api/me", {
-                        headers: {
-                            Authorization: localStorage.getItem("token")
-                        }
-                    })
-                        .then(resp => resp.json())
-                        .then(json => {
-                            if (json.data.base_path != '/') {
-                                basePath = basePath.replace(json.data.base_path, "")
-                            }
-                        })
-                        .catch(err => console.error(err))
-                        .finally(() => {
-                            window.open(`${basePath}${location.pathname.replace("/@markmap", "")}`)
-                        })
-                } else {
-                    window.open(`${basePath}${location.pathname.replace("/@markmap", "")}`)
+                if (location.pathname.includes('/raw')) {
+                    return mm.setShow(!mm.show)
                 }
-
-
+                window.open(`${import.meta.env.VITE_SERVER_URL}/markmap${location.pathname.replace("/@markmap", "")}`)
 
             }
         });
@@ -66,13 +48,16 @@ function renderToolbar(mm, wrapper) {
             },
         });
 
-        // toolbar.registry.recurse = {
-        //     ...toolbar.registry.recurse,
-        //     title: '折叠/展开',
-        //     onClick: () => hideAll(mm)
-        // }
-        // console.log( Toolbar.defaultItems);
-        toolbar.setItems([...Toolbar.defaultItems, 'edit', 'full', 'copyLink']);
+        toolbar.register({
+            id: 'download',
+            title: '下载网页',
+            content: Toolbar.icon('M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z'),
+            onClick: () => {
+
+            },
+        });
+
+        toolbar.setItems([...Toolbar.defaultItems.filter(item => item !== 'recurse'), 'edit', 'full', 'copyLink']);
         wrapper.append(toolbar.render());
     }
 }
@@ -90,6 +75,7 @@ const MarkmapHooks = React.memo((props) => {
         const mm = Markmap.create(refSvg.current);
         mm.showNotification = showNotification
         mm.setShow = props.setShow
+        mm.show = props.show
         refMm.current = mm;
         renderToolbar(refMm.current, refToolbar.current);
     }, [props]);
@@ -103,6 +89,7 @@ const MarkmapHooks = React.memo((props) => {
         mm.renderData();
         mm.fit();
         // 组件挂载时添加事件监听器
+        if (!props.edit)
         window.addEventListener('keydown', handleKeyDown);
 
         // 组件卸载时移除事件监听器
@@ -162,7 +149,7 @@ const MarkmapHooks = React.memo((props) => {
     return (
         <React.Fragment>
             <svg className="flex-1" ref={refSvg} />
-            <div className="absolute bottom-1 left-1 cursor-pointer" ref={refToolbar}></div>
+            <div className="absolute bottom-1 left-1" ref={refToolbar}></div>
         </React.Fragment>
     );
 })

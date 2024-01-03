@@ -2,8 +2,8 @@ import { Suspense, lazy } from "react"
 import ErrorBoundary from "./components/ErrorBoundary"
 import { NotificationProvider } from './components/NotificationContext';
 import 'assets/markmap.css'
-
-const Home = lazy(() => import("./pages/Home"))
+import Home from "@/pages/Home"
+// const Home = lazy(() => import("./pages/Home"))
 
 function App() {
 
