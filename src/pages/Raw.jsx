@@ -35,9 +35,9 @@ export default function Raw() {
     return (
         <div className="flex flex-row h-screen p-2 text-sm">
             <div className={`bg-red-500 text-white p-4 ${isVertical ? 'block' : 'hidden'} fixed top-0 left-0 w-full text-center`}>
-                请切换到横屏以获得最佳体验
+                请关闭竖屏锁定，横屏以显示编辑
             </div>
-            <div className={show ? 'w-2/3' : 'hidden'}>
+            <div className={`w-2/3 hidden ${show?'sm:block': ''} `}>
                 <textarea ref={textRef} className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
                     onChange={handleChange
                     }
@@ -45,7 +45,7 @@ export default function Raw() {
                 ></textarea>
             </div>
             <div className="w-full flex">
-                {content && <MarkmapHooks text={content} setShow={setShow} show={show} edit={true} />}
+                {content && <MarkmapHooks text={content} setShow={setShow} edit={true} />}
             </div>
         </div>
     );
