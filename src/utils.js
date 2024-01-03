@@ -89,23 +89,24 @@ export const showLevel = (target, level) => {
     })
 }
 
+export const extraOptions = {
+    maxWidth: 600,
+    duration: 100,
+    initialExpandLevel: 2
+}
+
 export const initMarkmapOptions = (mm, root) => {
-    mm.options.maxWidth = 600
-    mm.options.duration = 100
-    // mm.options.autoFit = true
-    mm.options.initialExpandLevel = 2
+    mm.options = { ...mm.options, ...extraOptions }
     if (!root.content) {
         root.content = decodeURI(location.pathname.split('/').pop().slice(0, -3));
     }
 }
 
-export function toggleFullScreen(setShow) {
+export function toggleFullScreen() {
     if (!document.fullscreenElement) {
-        setShow(false)
         document.documentElement.requestFullscreen();
     } else {
         if (document.exitFullscreen) {
-            setShow(true)
             document.exitFullscreen();
         }
     }
@@ -135,6 +136,27 @@ export const copyLink = () => {
             copyTextToClipboard(rawUrl)
         })
 }
+
+export const downloadHtml = (htmlContent) => {
+    // 创建Blob对象
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+
+    // 创建URL对象
+    const url = URL.createObjectURL(blob);
+
+    // 创建一个虚拟的a元素
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = decodeURI(location.pathname.slice(1)).replace('/', '-').replace('md', 'html');
+
+    // 模拟点击a元素
+    document.body.appendChild(a);
+    a.click();
+
+    // 清理
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+};
 
 export const sortByFirstNum = (a, b) => {
     return parseInt(a.split('-')[0]) - parseInt(b.split('-')[0])
