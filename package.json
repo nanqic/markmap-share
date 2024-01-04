@@ -11,10 +11,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "markmap-common": "^0.15.0",
-    "markmap-lib": "^0.15.2",
-    "markmap-toolbar": "^0.15.0",
-    "markmap-view": "^0.15.0",
+    "markmap-common": "^0.15.6",
+    "markmap-lib": "^0.15.8",
+    "markmap-toolbar": "^0.15.8",
+    "markmap-view": "^0.15.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "wouter": "^3.0.0-rc.2"
@@ -31,6 +31,7 @@
     "postcss": "^8.4.32",
     "rollup-plugin-visualizer": "^5.11.0",
     "tailwindcss": "^3.3.6",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vite-plugin-cdn-import": "^0.3.5"
   }
 }

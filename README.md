@@ -1,6 +1,6 @@
 [![deploy](https://github.com/nanqic/markmap-loader/actions/workflows/deploy.yml/badge.svg)](https://github.com/nanqic/markmap-loader/actions/workflows/deploy.yml)
 
-# Markmap Loader
+# Markmap Share
 
 ## 演示站点
 https://markmap-loader.pages.dev

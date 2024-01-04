@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import { visualizer } from "rollup-plugin-visualizer";
 import { resolve } from 'path'
 import process from "process"
+import { Plugin as importToCDN, autoComplete } from 'vite-plugin-cdn-import'
 
 export default ({ mode }) => {
   // 使用loadEnv获取环境变量
@@ -13,6 +14,18 @@ export default ({ mode }) => {
   return defineConfig({
     plugins: [
       react(),
+      importToCDN({
+        modules: [
+          autoComplete('react'),
+          autoComplete('react-dom'),
+          // {
+          //   name: "markmap-lib",
+          //   var: 'MarkmapLib',
+          //   path: 'https://unpkg.com/markmap-lib@0.15.8/dist/index.js',
+          //   version: "0.15.8"
+          // },
+        ],
+      }),
       visualizer({
         // 打包完成后自动打开浏览器，显示产物体积报告
         open: false,
