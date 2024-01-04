@@ -21,7 +21,7 @@ export const useSyncCallback = callback => {
 export async function postRequest(url) {
     const resp = await fetch(url, {
         method: 'POST',
-    })
+    }).catch(err => alert('服务端网络出错，请等待修复或稍后再试'))
     const json = await resp?.json()
     return json?.code != 200 ? null : json
 }
@@ -98,7 +98,7 @@ export const extraOptions = {
 export const initMarkmapOptions = (mm, root) => {
     mm.options = { ...mm.options, ...extraOptions }
     if (!root.content) {
-        root.content = decodeURI(location.pathname.split('/').pop().slice(0, -3));
+        root.content = `<strong>${decodeURI(location.pathname.split('/').pop().replace(/(.md|repl)$/, ''))}</strong>`;
     }
 }
 
