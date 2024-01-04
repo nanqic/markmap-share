@@ -1,12 +1,12 @@
 import { Route, Switch } from 'wouter';
 import MarkmapLoader from "@/pages/MarkmapLoader"
-import Raw from './Raw';
+import Repl from './Repl';
 
 export default function Home() {
   return (
     <>
       <Switch>
-        <Route path={`${import.meta.env.VITE_BASE_URL}/raw`} component={Raw} />
+        <Route path={`${import.meta.env.VITE_BASE_URL}/repl`} component={Repl} />
         <Route path={`${import.meta.env.VITE_BASE_URL}/:username?/:dir?/:filename?`} component={MarkmapLoader} />
       </Switch>
     </>

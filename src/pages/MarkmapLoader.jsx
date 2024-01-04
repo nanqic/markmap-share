@@ -6,7 +6,7 @@ const FileTree = lazy(() => import("@/components/FileTree"))
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 
 const MarkmapLoader = () => {
-  const params = useParams();
+  const params = useParams(undefined);
   const [, setLocation] = useLocation();
   const [show, setShow] = useState(true)
   const [text, setText] = useState()
@@ -19,6 +19,7 @@ const MarkmapLoader = () => {
       case 'SET_USERLIST':
         return { ...state, userlist: action.payload };
       case 'SET_USERNAME':
+        localStorage.setItem("username", action.payload)
         return { ...state, username: action.payload };
       case 'SET_DIRS':
         return { ...state, dirs: action.payload };
@@ -31,7 +32,7 @@ const MarkmapLoader = () => {
 
   const initialState = {
     userlist: undefined,
-    username: undefined,
+    username: localStorage.getItem("username"),
     dirs: null,
     dirfiles: null,
   };
@@ -48,9 +49,10 @@ const MarkmapLoader = () => {
   }, [])
 
   useEffect(() => {
-    if (params.username && decodeURI(params.username) != state.username) {
-      dispatch({ type: 'SET_USERNAME', payload: decodeURI(params.username) })
-      loadUserFiles(params.username)
+    let username = decodeURI(params.username)
+    if (username != ('undefined' || state.username)) {
+      dispatch({ type: 'SET_USERNAME', payload: username })
+      loadUserFiles(username)
     }
 
     if (params.dir?.slice(-3) == '.md') {
@@ -59,7 +61,7 @@ const MarkmapLoader = () => {
       loadText(`${params.dir}/${params.filename}`);
     }
 
-  }, [params, show])
+  }, [params])
 
   const loadUsers = async () => {
     const dirsUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/dirs?path=markmap`
@@ -67,18 +69,18 @@ const MarkmapLoader = () => {
     const userArr = data.map(item => item.name)
     dispatch({ type: 'SET_USERLIST', payload: userArr });
 
-    let defaultUser = userArr[0]
-    if (!params.username) {
-      dispatch({ type: 'SET_USERNAME', payload: defaultUser })
-      loadUserFiles(defaultUser)
+    let defaultUser = params.username ? decodeURI(params.username) : state.username;
+    if (!params.username && !state.username) {
+      defaultUser = userArr[0]
     }
+    dispatch({ type: 'SET_USERNAME', payload: defaultUser })
+    loadUserFiles(defaultUser)
   }
 
   async function loadUserFiles(user) {
     const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`;
     const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content;
     dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) });
-
     const dirfiles = await Promise.all(dirsContent?.filter(file => file.is_dir)?.map(async dir => {
       const resp = await postRequest(`${listUrl}/${user}/${dir.name}`);
       const files = resp?.data.content.filter(filterFile).map(item => item.name.slice(0, -3));

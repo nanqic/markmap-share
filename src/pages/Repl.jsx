@@ -3,7 +3,7 @@ import { useDebounce } from '../utils'
 
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 
-export default function Raw() {
+export default function Repl() {
     const textRef = useRef();
     const [show, setShow] = useState(true);
     const [content, setContent] = useState();

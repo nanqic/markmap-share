@@ -20,7 +20,7 @@ function renderToolbar(mm, wrapper) {
             title: '编辑',
             content: Toolbar.icon('M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'),
             onClick: () => {
-                if (location.pathname.includes('/raw')) {
+                if (location.pathname.includes('/repl')) {
                     return mm.setShow(show => !show)
                 }
                 window.open(`${import.meta.env.VITE_SERVER_URL}/markmap${location.pathname.replace("/@markmap", "")}`)
@@ -34,6 +34,7 @@ function renderToolbar(mm, wrapper) {
             content: Toolbar.icon('M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707m-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707'),
             onClick: () => {
                 toggleFullScreen()
+                mm.fit()
             },
         });
 
@@ -73,7 +74,6 @@ const MarkmapHooks = React.memo((props) => {
     const showNotification = useNotification();
 
     const handleFullScreenChange = () => {
-        console.log(123);
         props.setShow(value => !value)
     };
     useEffect(() => {
@@ -144,7 +144,8 @@ const MarkmapHooks = React.memo((props) => {
             case "space":
                 return mm.fit();
             case "F11":
-                return props.setShow(value => !value);
+                handleFullScreenChange()
+                return mm.fit();
             default:
                 // Handle default case if needed
                 break;

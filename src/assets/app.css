@@ -7,9 +7,12 @@ li {
   list-style-type: none;
 }
 
+.mm-toolbar>.mm-toolbar-item {
+  cursor: pointer;
+}
+
 .mm-toolbar>.mm-toolbar-item:nth-child(n+4)>svg {
   padding: 2px;
   width: 90%;
   height: 90%;
-  cursor: pointer;
 }
