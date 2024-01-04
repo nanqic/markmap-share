@@ -146,9 +146,7 @@ const MarkmapLoader = () => {
 
       </div>
       {text &&
-        <div className="flex flex-col h-screen p-2">
-          <MarkmapHooks text={text} setShow={setShow} />
-        </div>
+        <MarkmapHooks text={text} setShow={setShow} />
       }
     </>
   )

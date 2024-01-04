@@ -16,3 +16,10 @@ li {
   width: 90%;
   height: 90%;
 }
+
+.markmap-foreign div:not(:empty)::before {
+  content: '🟢';
+  font-size: 12px;
+  vertical-align: middle;
+  padding-right: 1px;
+}

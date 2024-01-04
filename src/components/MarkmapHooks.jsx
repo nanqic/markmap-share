@@ -157,7 +157,9 @@ const MarkmapHooks = React.memo((props) => {
 
     return (
         <React.Fragment>
-            <svg className="flex-1" ref={refSvg} />
+            <div className="flex flex-col h-screen p-2">
+                <svg className="flex-1" ref={refSvg} />
+            </div>
             <div className="absolute bottom-1 left-1" ref={refToolbar}></div>
         </React.Fragment>
     );
