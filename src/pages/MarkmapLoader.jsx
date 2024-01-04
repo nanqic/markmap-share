@@ -6,7 +6,7 @@ const FileTree = lazy(() => import("@/components/FileTree"))
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 
 const MarkmapLoader = () => {
-  const params = useParams(undefined);
+  const params = useParams();
   const [, setLocation] = useLocation();
   const [show, setShow] = useState(true)
   const [text, setText] = useState()
@@ -121,13 +121,13 @@ const MarkmapLoader = () => {
 
           <summary className='text-green-700'>
             <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`} onClick={() => setText()}> 🏠</Link>
-            <select onChange={handleChangeUser} value={state.username}>
+            {state.username && <select onChange={handleChangeUser} value={state.username}>
               {
                 state.userlist?.map(user => {
                   return <option key={user} value={user}>{user}</option>
                 })
               }
-            </select>
+            </select>}
             <button onClick={changeTheme} className='pl-2 inline-block h-max'>
               {!theme ? <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                 className='pt-1' fill="currentColor" viewBox="0 0 16 16">
