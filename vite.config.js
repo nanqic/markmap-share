@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import { visualizer } from "rollup-plugin-visualizer";
 import { resolve } from 'path'
 import process from "process"
-import { Plugin as importToCDN, autoComplete } from 'vite-plugin-cdn-import'
+import { Plugin as importToCDN } from 'vite-plugin-cdn-import'
 
 export default ({ mode }) => {
   // 使用loadEnv获取环境变量
@@ -16,14 +16,18 @@ export default ({ mode }) => {
       react(),
       importToCDN({
         modules: [
-          autoComplete('react'),
-          autoComplete('react-dom'),
-          // {
-          //   name: "markmap-lib",
-          //   var: 'MarkmapLib',
-          //   path: 'https://unpkg.com/markmap-lib@0.15.8/dist/index.js',
-          //   version: "0.15.8"
-          // },
+          {
+            name: "react",
+            var: 'React',
+            path: 'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/react/18.2.0/umd/react.production.min.js',
+            version: "18.2.0"
+          },
+          {
+            name: "react-dom",
+            var: 'ReactDOM',
+            path: 'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/react-dom/18.2.0/umd/react-dom.production.min.js',
+            version: "18.2.0"
+          },
         ],
       }),
       visualizer({
@@ -77,9 +81,9 @@ export default ({ mode }) => {
           manualChunks: {
             markmap: [
               'markmap-view',
-              'markmap-lib',
               'markmap-common',
               'markmap-toolbar',
+              'markmap-lib',
             ]
           }
         }
