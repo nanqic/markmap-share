@@ -14,3 +14,7 @@
 .markmap-foreign div:not(:empty)::before {
   content: '';
 }
+
+.markmap-foreign strong {
+  color: #1f69ca;
+}
