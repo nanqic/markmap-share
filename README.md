@@ -15,7 +15,7 @@ https://markmap-loader.pages.dev
 ## 快捷键
 - `0` or `space`: fit window in center in case you move or zoom it.
 - `m`: show all. / hide all except the central one.
-- `1`~`9`: expand to level 1~9.
+- `1`\~`9`: expand to level 1~9.
 - `+`: zoom in.
 - `-`: zoom out.
 - `.`: collapse all to level 1.

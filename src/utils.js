@@ -235,3 +235,52 @@ export function renderToolbar(mm, wrapper) {
         wrapper.append(toolbar.render());
     }
 }
+
+const getToken = () => {
+    if (!localStorage.getItem("token")) alert('请先登录box网盘, 再回到本页操作');
+    return localStorage.getItem("token")
+}
+
+export function fetchPath() {
+    const token = getToken()
+    let basePath = '/markmap/nan'
+
+    fetch("/api/me", {
+        headers: {
+            Authorization: token
+        }
+    })
+        .then(resp => resp.json())
+        .then(json => {
+            if (json.data.base_path != '/' && json.data.base_path != '/markmap') {
+                basePath = json.data.base_path
+            }
+
+            localStorage.setItem("base_path", basePath)
+            return basePath
+        })
+        .catch(err => console.error(err))
+}
+
+export async function saveEdit(title, content) {
+    const token = getToken()
+    const basePath = localStorage.getItem("base_path") || fetchPath()
+    const filPath = `${basePath}/${title}.md`
+    const myheaders = {
+        Authorization: token,
+        'File-Path': encodeURI(filPath),
+        'Content-Type': 'text/plain',
+        'Content-Length': content.length
+    }
+    const res = await fetch('/api/fs/put', {
+        method: "PUT",
+        headers: myheaders,
+        body: content
+    })
+        .catch(err => console.error(err))
+
+    const json = await res.json()
+    return json.message
+
+
+}

@@ -1,7 +1,9 @@
 import { lazy, useRef, useEffect, useState } from 'react'
-import { useDebounce } from '../utils'
+import { saveEdit, useDebounce } from '../utils'
+import { useNotification } from '../components/NotificationContext';
 
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
+const WanrMsg = lazy(() => import("@/components/WanrMsg"))
 
 export default function Repl() {
     const textRef = useRef();
@@ -15,6 +17,26 @@ export default function Repl() {
 
     const handleOrientationChange = () => {
         setIsVertical(screen.orientation?.type.includes("portrait"))
+    }
+
+    const showNotification = useNotification();
+
+    const handleSave = async () => {
+        const re = /(?<=(#|-) )\S{1,32}/
+        let title = content.match(re).shift()
+        title = window.prompt('确认保存', `${title}`)
+        let res;
+        if (title && title.trim() != '') {
+            res = await saveEdit(title, content)
+        } else {
+            alert('标题不能为空')
+        }
+
+        if (res == 'success') {
+            return showNotification('保存成功！')
+        }
+
+        showNotification('保存失败！原因:' + res)
     }
     useEffect(() => {
         let cachedContent = localStorage.getItem("raw-content");
@@ -34,15 +56,19 @@ export default function Repl() {
 
     return (
         <div className="flex flex-row h-screen p-2 text-sm">
-            <div className={`bg-red-500 text-white p-4 ${isVertical ? 'block' : 'hidden'} fixed top-0 left-0 w-full text-center`}>
-                请关闭竖屏锁定，横屏以显示编辑
-            </div>
-            <div className={`w-2/3 hidden ${show?'sm:block': ''} `}>
+            <WanrMsg show={isVertical} msg={'请关闭竖屏锁定，横屏以获得更好的体验'} />
+            <div className={`w-2/3 hidden ${show ? 'sm:block' : ''} `}>
                 <textarea ref={textRef} className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
                     onChange={handleChange
                     }
                     defaultValue={localStorage.getItem("raw-content")}
                 ></textarea>
+
+                {localStorage.getItem("token") &&
+                    <button className='float-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded' onClick={handleSave}>保存</button>
+                }
+                <button className='float-end bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 mx-4 rounded' onClick={() => textRef.current.value = ''}>清空</button>
+
             </div>
             <div className="w-full flex">
                 {content && <MarkmapHooks text={content} setShow={setShow} edit={true} />}
