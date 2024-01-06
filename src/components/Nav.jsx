@@ -1,10 +1,11 @@
 import { useState, useEffect, lazy } from 'react'
-import { Link } from 'wouter'
+import { Link, useLocation } from 'wouter'
 const FileTree = lazy(() => import("@/components/FileTree"))
 
 export default function
-    ({ state, setText }) {
+    ({ state, setContent }) {
     const [theme, setTheme] = useState()
+    const [, setLocation] = useLocation();
 
     useEffect(() => {
 
@@ -14,7 +15,7 @@ export default function
         }
     }, [])
     const handleChangeUser = ({ target: { value } }) => {
-        setText();
+        setContent();
         setLocation(`${import.meta.env.VITE_BASE_URL}/${value}`);
     };
 
@@ -34,7 +35,7 @@ export default function
         <>
             <details open>
                 <summary className='text-green-700'>
-                    <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`} onClick={() => setText()}> 🏠</Link>
+                    <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`} onClick={() => setContent()}> 🏠</Link>
                     {state.username && <select onChange={handleChangeUser} value={state.username}>
                         {
                             state.userlist?.map(user => {
@@ -42,8 +43,7 @@ export default function
                             })
                         }
                     </select>}
-                    <Link href={`${import.meta.env.VITE_BASE_URL}/repl`} onClick={() => setText()}> new</Link>
-
+                    <Link href={`${import.meta.env.VITE_BASE_URL}/repl`}> new</Link>
                     <button onClick={changeTheme} className='pl-2 inline-block h-max'>
                         {!theme ? <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                             className='pt-1' fill="currentColor" viewBox="0 0 16 16">

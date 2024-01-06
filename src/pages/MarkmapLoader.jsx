@@ -1,16 +1,16 @@
 import { lazy, useEffect, useReducer, useState } from 'react'
-import { useParams, useLocation } from 'wouter'
+import { useParams } from 'wouter'
 import { filterFile, postRequest, textRequest } from '../utils'
 import Nav from '../components/Nav'
+import TextEdit from '../components/TextEdit'
 
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 
 const MarkmapLoader = () => {
   const params = useParams();
-  const [, setLocation] = useLocation();
   const [show, setShow] = useState(true)
-  const [text, setText] = useState()
-
+  const [content, setContent] = useState()
+  const [editing, setEditing] = useState(false);
 
   // 定义 reducer
   const reducer = (state, action) => {
@@ -87,18 +87,19 @@ const MarkmapLoader = () => {
   const loadText = async (filename) => {
     const fileUrl = `${import.meta.env.VITE_SERVER_URL}/p/markmap/${params.username}/${filename}`
     let resp = await textRequest(fileUrl)
-    setText(resp)
+    setContent(resp)
   }
 
   return (
-    <>
-      <div className={show ? "absolute top-1 left-1 opacity-80" : 'hidden'}>
-        <Nav state={state} setText={setText} />
+    <div className='flex flex-row h-screen p-2'>
+      <div className={show && !editing ? "absolute top-1 left-1 opacity-80" : 'hidden'}>
+        <Nav state={state} setContent={setContent} />
       </div>
-      {text &&
-        <MarkmapHooks text={text} setShow={setShow} />
+      {editing && <TextEdit content={content} setContent={setContent} setEditing={setEditing}/>}
+      {content &&
+        <MarkmapHooks content={content} setShow={setShow} setEditing={setEditing} editing={editing} />
       }
-    </>
+    </div>
   )
 }
 

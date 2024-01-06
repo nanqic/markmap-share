@@ -20,6 +20,7 @@ const MarkmapHooks = React.memo((props) => {
         const mm = Markmap.create(refSvg.current);
         mm.showNotification = showNotification
         mm.setShow = props.setShow
+        mm.setEditing = props.setEditing
         refMm.current = mm;
         renderToolbar(refMm.current, refToolbar.current);
     }, [props]);
@@ -27,13 +28,13 @@ const MarkmapHooks = React.memo((props) => {
     useEffect(() => {
         const mm = refMm.current;
         if (!mm) return;
-        const { root } = transformer.transform(adaptLogseq(props.text));
+        const { root } = transformer.transform(adaptLogseq(props.content));
         initMarkmapOptions(mm, root)
         mm.setData(root);
         mm.renderData();
         mm.fit();
         // 组件挂载时添加事件监听器
-        if (!props.edit) {
+        if (!props.editing) {
             document.addEventListener('keydown', handleKeyDown);
         }
         document.addEventListener('fullscreenchange', handleFullScreenChange);
