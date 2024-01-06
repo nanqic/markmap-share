@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'wouter';
 import { saveEdit, useDebounce } from '../utils'
 import { useNotification } from '../components/NotificationContext';
@@ -15,10 +15,15 @@ export default function TextEdit({ content, setContent, setEditing }) {
     const showNotification = useNotification();
 
     const handleSave = async () => {
-        const re = /(?<=(#|-) )\S{1,32}/
-        let title = content.match(re).shift()
-        title = window.prompt('确认保存', `${title}`)
+        let title = decodeURI(location.pathname.slice(0, -3))
         let res;
+
+        if (location.pathname.endsWith('/repl')) {
+            const re = /(?<=(#|-) )\S{1,32}/
+            title = content.match(re).shift()
+        }
+
+        title = window.prompt('确认保存', `${title.split('/').pop()}`)
         if (title && title.trim() != '') {
             res = await saveEdit(title, content)
         } else {
@@ -35,16 +40,6 @@ export default function TextEdit({ content, setContent, setEditing }) {
     const boxEdit = () => {
         window.open(`${import.meta.env.VITE_SERVER_URL}/markmap${location.pathname.replace("/@markmap", "")}`)
     }
-    useEffect(() => {
-        if (!content) {
-            let cachedContent = localStorage.getItem("raw-content");
-            if (!cachedContent) {
-                cachedContent = `# 学习\n\n## 学习方法\n- 主动学习\n- 高效学习\n- 深度学习\n\n## 学习计划\n- 设定目标\n- 制定计划\n- 实施反馈\n\n## 学习态度\n- 主动积极\n- 持续专注\n- 坚持不懈\n`
-                localStorage.setItem("raw-content", cachedContent);
-            }
-            setContent(cachedContent)
-        }
-    }, [])
 
     return (
         <div className='w-2/3 text-sm hidden md:block md:visible'>
