@@ -227,7 +227,8 @@ export function renderToolbar(mm, wrapper) {
             },
         });
 
-        toolbar.setItems([...Toolbar.defaultItems.filter(item => item !== 'recurse'), 'edit', 'full', 'copyLink', 'download']);
+        const edit = window.innerWidth > 640 ? 'edit' : undefined
+        toolbar.setItems([...Toolbar.defaultItems.filter(item => item !== 'recurse'), edit, 'full', 'copyLink', 'download']);
         wrapper.append(toolbar.render());
     }
 }
