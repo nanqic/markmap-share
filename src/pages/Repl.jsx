@@ -1,20 +1,20 @@
 import { lazy, useRef, useEffect, useState } from 'react'
 import { useDebounce } from '../utils'
-import WanrMsg from '../components/WanrMsg';
 
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 
 export default function Repl() {
     const textRef = useRef();
-    const [show, setShow] = useState(screen.orientation?.type.includes("landscape"));
+    const [show, setShow] = useState(true);
     const [content, setContent] = useState();
+    const [isVertical, setIsVertical] = useState(screen.orientation?.type.includes("portrait"))
     const handleChange = useDebounce(({ target: { value } }) => {
         localStorage.setItem("raw-content", value);
         setContent(value)
     }, 1000)
 
     const handleOrientationChange = () => {
-        setShow(show => !show)
+        setIsVertical(screen.orientation?.type.includes("portrait"))
     }
     useEffect(() => {
         let cachedContent = localStorage.getItem("raw-content");
@@ -30,12 +30,14 @@ export default function Repl() {
         return () => {
             window.removeEventListener('orientationchange', handleOrientationChange);
         };
-    }, [show]);
+    }, [isVertical]);
 
     return (
         <div className="flex flex-row h-screen p-2 text-sm">
-            <WanrMsg show={!show} msg={'请关闭竖屏锁定，横屏以获得更好的体验'} />
-            <div className={`w-2/3 hidden ${show ? 'sm:block' : ''} `}>
+            <div className={`bg-red-500 text-white p-4 ${isVertical ? 'block' : 'hidden'} fixed top-0 left-0 w-full text-center`}>
+                请关闭竖屏锁定，横屏以显示编辑
+            </div>
+            <div className={`w-2/3 hidden ${show?'sm:block': ''} `}>
                 <textarea ref={textRef} className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
                     onChange={handleChange
                     }
