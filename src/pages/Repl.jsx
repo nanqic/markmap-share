@@ -65,9 +65,10 @@ export default function Repl() {
                 ></textarea>
 
                 {localStorage.getItem("token") &&
-                    <button className='float-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded' onClick={handleSave}>保存</button>
+                    <button className='float-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 ml-4 rounded' onClick={handleSave}>保存</button>
                 }
-                <button className='float-end bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 mx-4 rounded' onClick={() => textRef.current.value = ''}>清空</button>
+                <button className='float-end bg-slate-400 hover:bg-slate-700 text-white font-bold py-1 px-2 ml-4 rounded' onClick={() => history.go(-1)}>返回</button>
+                <button className='float-end bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 ml-4 rounded' onClick={() => textRef.current.value = ''}>清空</button>
 
             </div>
             <div className="w-full flex">
