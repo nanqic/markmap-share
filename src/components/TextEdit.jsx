@@ -24,17 +24,15 @@ export default function TextEdit({ content, setContent, setEditing }) {
         }
 
         title = window.prompt('确认保存', `${title.split('/').pop()}`)
-        if (title && title.trim() != '') {
-            res = await saveEdit(title, content)
-        } else {
-            alert('标题不能为空')
+        if (title?.trim() == '') {
+            return;
         }
 
+        res = await saveEdit(title, content)
         if (res == 'success') {
             return showNotification({ msg: '保存成功！' })
         }
-
-        showNotification({ type: 'err', msg: '保存失败！登录过期 ' + res })
+        showNotification({ type: 'err', msg: '保存失败！请重新登录 ' + res })
     }
 
     const boxEdit = () => {

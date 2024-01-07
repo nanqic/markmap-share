@@ -238,30 +238,33 @@ const getToken = () => {
     return localStorage.getItem("token")
 }
 
-export function fetchPath() {
+export async function fetchPath() {
+    if (localStorage.getItem("base_path") != null) {
+        return localStorage.getItem("base_path")
+    }
+
     const token = getToken()
+    if (!token) return
     let basePath = '/markmap/nan'
 
-    fetch("/api/me", {
+    const res = await fetch("/api/me", {
         headers: {
             Authorization: token
         }
-    })
-        .then(resp => resp.json())
-        .then(json => {
-            if (json.data.base_path != '/' && json.data.base_path != '/markmap') {
-                basePath = json.data.base_path
-            }
+    }).catch(err => console.error(err))
 
-            localStorage.setItem("base_path", basePath)
-            return basePath
-        })
-        .catch(err => console.error(err))
+    const json = await res.json()
+    if (json.data.base_path != '/' && json.data.base_path != '/markmap') {
+        basePath = json.data.base_path
+    }
+    localStorage.setItem("base_path", basePath)
+
+    return basePath
 }
 
 export async function saveEdit(title, content) {
     const token = getToken()
-    const basePath = localStorage.getItem("base_path") || fetchPath()
+    const basePath = await fetchPath()
     const filPath = `${basePath}/${title}.md`
     const myheaders = {
         Authorization: token,
