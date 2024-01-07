@@ -20,11 +20,11 @@ export default function TextEdit({ content, setContent, setEditing }) {
 
         if (location.pathname.endsWith('/repl')) {
             const re = /(?<=(#|-) )\S{1,32}/
-            title = content.match(re).shift()
+            title = '/' + content.match(re).shift()
         }
 
-        title = window.prompt('确认保存', `${title.split('/').pop()}`)
-        if (title?.trim() == '') {
+        let comfirm = window.prompt('确认保存', `${title.split('/').pop()}`)
+        if (comfirm?.trim() == '') {
             return;
         }
 
