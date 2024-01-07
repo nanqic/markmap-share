@@ -5,8 +5,8 @@ const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 const WanrMsg = lazy(() => import("@/components/WanrMsg"))
 
 export default function Repl() {
-    const [editing, setEditing] = useState(true);
-    const [show, setShow] = useState(true)
+    const [editing, setEditing] = useState(false);
+    const [showEdit, setShowEdit] = useState(true);
     const [content, setContent] = useState();
     const [isVertical, setIsVertical] = useState(screen.orientation?.type.includes("portrait"))
 
@@ -34,9 +34,9 @@ export default function Repl() {
     return (
         <div className="flex flex-row h-screen p-2">
             <WanrMsg show={isVertical} msg={'请关闭竖屏锁定，横屏以获得更好的体验'} />
-            {show && <TextEdit content={content} setContent={setContent} setEditing={setEditing} />}
+            {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing} />}
             <div className="w-full flex">
-                {content && <MarkmapHooks content={content} setEditing={setShow} editing={editing} />}
+                {content && <MarkmapHooks content={content} setShowEdit={setShowEdit} editing={editing} />}
             </div>
         </div>
     );

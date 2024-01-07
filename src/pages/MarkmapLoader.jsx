@@ -11,6 +11,7 @@ const MarkmapLoader = () => {
   const [show, setShow] = useState(true)
   const [content, setContent] = useState()
   const [editing, setEditing] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   // 定义 reducer
   const reducer = (state, action) => {
@@ -95,9 +96,9 @@ const MarkmapLoader = () => {
       <div className={show && !editing ? "absolute top-1 left-1 opacity-80" : 'hidden'}>
         <Nav state={state} setContent={setContent} />
       </div>
-      {editing && <TextEdit content={content} setContent={setContent} setEditing={setEditing}/>}
+      {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing}/>}
       {content &&
-        <MarkmapHooks content={content} setShow={setShow} setEditing={setEditing} editing={editing} />
+        <MarkmapHooks content={content} setShow={setShow} setShowEdit={setShowEdit} editing={editing} />
       }
     </div>
   )

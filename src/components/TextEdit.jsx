@@ -10,7 +10,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
     const handleChange = useDebounce(({ target: { value } }) => {
         localStorage.setItem("raw-content", value);
         setContent(value)
-    }, 1000)
+    }, 700)
 
     const showNotification = useNotification();
 
@@ -31,10 +31,10 @@ export default function TextEdit({ content, setContent, setEditing }) {
         }
 
         if (res == 'success') {
-            return showNotification('保存成功！')
+            return showNotification({ msg: '保存成功！' })
         }
 
-        showNotification('保存失败！原因:' + res)
+        showNotification({ type: 'err', msg: '保存失败！登录过期 ' + res })
     }
 
     const boxEdit = () => {
@@ -54,7 +54,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
                 <button className='float-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded' onClick={handleSave}>保存</button>
             }
             <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`}
-                className={`float-end mr-4 mt-1.5 scale-150 ${location.pathname != ('/repl') ? 'hidden' : ''}`}
+                className={`float-end mr-4 mt-1.5 scale-150 ${location.pathname.endsWith('/repl') ? '' : 'hidden'}`}
             >🏠</Link>
             <button className='float-end bg-red-500 mr-4 hover:bg-red-700 text-white font-bold py-1 px-2 rounded' onClick={() => textRef.current.value = ''}>清空</button>
             <button className={`float-end bg-amber-300 hover:bg-amber-600 mr-4 text-white font-bold py-1 px-2 rounded ${location.pathname.includes('/repl') ? 'hidden' : ''}`} onClick={boxEdit}>原编辑页</button>

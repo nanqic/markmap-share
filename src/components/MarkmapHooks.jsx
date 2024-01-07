@@ -20,7 +20,7 @@ const MarkmapHooks = React.memo((props) => {
         const mm = Markmap.create(refSvg.current);
         mm.showNotification = showNotification
         mm.setShow = props.setShow
-        mm.setEditing = props.setEditing
+        mm.setShowEdit = props.setShowEdit
         refMm.current = mm;
         renderToolbar(refMm.current, refToolbar.current);
     }, [props]);
