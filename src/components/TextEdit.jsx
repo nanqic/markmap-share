@@ -5,7 +5,6 @@ import { useNotification } from '../components/NotificationContext';
 
 export default function TextEdit({ content, setContent, setEditing }) {
     const textRef = useRef();
-    const [] = useState();
 
     const handleChange = useDebounce(({ target: { value } }) => {
         localStorage.setItem("raw-content", value);
@@ -20,7 +19,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
 
         if (location.pathname.endsWith('/repl')) {
             const re = /(?<=(#|-) )\S{1,32}/
-            title = '/' + content.match(re).shift()
+            title = content.match(re).shift()
         }
 
         let comfirm = window.prompt('确认保存', `${title.split('/').pop()}`)

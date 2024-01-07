@@ -238,40 +238,45 @@ const getToken = () => {
     return localStorage.getItem("token")
 }
 
-export async function fetchPath() {
-    if (localStorage.getItem("base_path") != null) {
-        return localStorage.getItem("base_path")
+export async function getUserPath() {
+    if (localStorage.getItem("user_path") != null) {
+        return localStorage.getItem("user_path")
     }
 
     const token = getToken()
     if (!token) return
-    let basePath = '/markmap/nan'
-
     const res = await fetch("/api/me", {
         headers: {
             Authorization: token
         }
     }).catch(err => console.error(err))
-
     const json = await res.json()
-    if (json.data.base_path != '/' && json.data.base_path != '/markmap') {
-        basePath = json.data.base_path
-    }
-    localStorage.setItem("base_path", basePath)
 
-    return basePath
+    let path = json.data.base_path
+
+    if (path == '/') {
+        path = '/nan'
+    }
+    localStorage.setItem("user_path", path)
+    return path
 }
 
 export async function saveEdit(title, content) {
     const token = getToken()
-    const basePath = await fetchPath()
+    let userPath = '';
+    if (title.indexOf('/') == -1) {
+        userPath = await getUserPath() + '/'
+    }
+    let basePath = `${import.meta.env.VITE_SERVER_PATH}${userPath}${title}`
     const filPath = `${basePath}/${title}.md`
+
     const myheaders = {
         Authorization: token,
         'File-Path': encodeURI(filPath),
         'Content-Type': 'text/plain',
         'Content-Length': content.length
     }
+    
     const res = await fetch('/api/fs/put', {
         method: "PUT",
         headers: myheaders,

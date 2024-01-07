@@ -37,7 +37,9 @@ const MarkmapHooks = React.memo((props) => {
         if (!props.editing) {
             document.addEventListener('keydown', handleKeyDown);
         }
-        document.addEventListener('fullscreenchange', handleFullScreenChange);
+        if (props.setShow) {
+            document.addEventListener('fullscreenchange', handleFullScreenChange);
+        }
 
         // 组件卸载时移除事件监听器
         return () => {
