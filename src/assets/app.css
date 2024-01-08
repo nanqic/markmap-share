@@ -7,7 +7,10 @@ li {
   list-style-type: none;
 }
 
-.mm-toolbar>.mm-toolbar-item {
+.mm-toolbar>.mm-toolbar-item,
+li,
+select,
+summary {
   cursor: pointer;
 }
 
@@ -19,7 +22,15 @@ li {
 
 .markmap-foreign div:not(:empty)::before {
   content: '🟢';
-  font-size: 12px;
+  font-size: 10px;
   vertical-align: middle;
   padding-right: 1px;
+  padding-bottom: 1px;
+  display: inline-block;
+}
+
+summary svg:hover,
+.folder:hover,
+li:hover {
+  color: forestgreen;
 }

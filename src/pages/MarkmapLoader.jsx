@@ -12,6 +12,7 @@ const MarkmapLoader = () => {
   const [content, setContent] = useState()
   const [editing, setEditing] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [open, setOpen] = useState(true);
 
   // 定义 reducer
   const reducer = (state, action) => {
@@ -93,12 +94,12 @@ const MarkmapLoader = () => {
 
   return (
     <div className='flex flex-row h-screen p-2'>
-      <div className={show && !showEdit ? "absolute top-1 left-1 opacity-80" : 'hidden'}>
-        <Nav state={state} setContent={setContent} />
+      <div className={show && !showEdit ? "absolute top-1 left-1" : 'hidden'}>
+        <Nav state={state} setContent={setContent} setOpen={setOpen} />
       </div>
       {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing}/>}
       {content &&
-        <MarkmapHooks content={content} setShow={setShow} setShowEdit={setShowEdit} editing={editing} />
+        <MarkmapHooks open={open} content={content} setShow={setShow} setShowEdit={setShowEdit} editing={editing} />
       }
     </div>
   )

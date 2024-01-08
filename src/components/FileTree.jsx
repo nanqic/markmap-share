@@ -30,7 +30,7 @@ const FileTree = React.memo(
           state.dirfiles?.sort((a, b) => a.name.split('-')[0] - b.name.split('-')[0]).map(dir => {
             return (
               <details className='pl-3' key={dir.name} open={decodeURI(location.pathname).includes(dir.name) || open&&open[`${state.username}-${dir.name}`]} onToggle={e => handleToglle(e, dir.name)}>
-                <summary className='text-blue-500'>
+                <summary className='text-blue-500 folder'>
                   {dir.name}
                 </summary>
                 {dir.files?.sort(sortByFirstNum).map(file => {

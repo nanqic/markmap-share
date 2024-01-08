@@ -3,7 +3,7 @@ import { Link, useLocation } from 'wouter'
 const FileTree = lazy(() => import("@/components/FileTree"))
 
 export default function
-    ({ state, setContent }) {
+    ({ state, setContent, setOpen }) {
     const [theme, setTheme] = useState()
     const [, setLocation] = useLocation();
 
@@ -34,8 +34,8 @@ export default function
     return (
         <>
             <details open>
-                <summary className='flex items-center text-green-700'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <summary className='flex items-center text-grey-500'>
+                    <svg onClick    ={() => setOpen(open => !open)} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                     </svg>
                     <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`} onClick={() => setContent()}> 🏠</Link>
