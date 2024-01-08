@@ -99,7 +99,7 @@ const MarkmapLoader = () => {
       </div>
       {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing} />}
       {content &&
-        <MarkmapHooks open={open&&!showEdit} content={content} setShow={setShow} setShowEdit={setShowEdit} editing={editing} showEdit={showEdit} />
+        <MarkmapHooks open={open && !showEdit} content={content} show={show} setShow={setShow} setShowEdit={setShowEdit} editing={editing} showEdit={showEdit} />
       }
     </div>
   )
