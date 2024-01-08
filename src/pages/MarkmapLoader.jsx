@@ -97,9 +97,9 @@ const MarkmapLoader = () => {
       <div className={show && !showEdit ? "absolute top-1 left-1" : 'hidden'}>
         <Nav state={state} setContent={setContent} setOpen={setOpen} />
       </div>
-      {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing}/>}
+      {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing} />}
       {content &&
-        <MarkmapHooks open={open} content={content} setShow={setShow} setShowEdit={setShowEdit} editing={editing} />
+        <MarkmapHooks open={open&&!showEdit} content={content} setShow={setShow} setShowEdit={setShowEdit} editing={editing} showEdit={showEdit} />
       }
     </div>
   )

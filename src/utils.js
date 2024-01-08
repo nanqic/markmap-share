@@ -97,8 +97,13 @@ export const extraOptions = {
     initialExpandLevel: 2
 }
 
-export const initMarkmapOptions = (mm, root) => {
+export const initMarkmapOptions = (mm, root, level) => {
     mm.options = { ...mm.options, ...extraOptions }
+
+    if (level != undefined) {
+        mm.options.initialExpandLevel = level
+    }
+
     if (!root.content) {
         root.content = `<strong>${decodeURI(location.pathname.split('/').pop().replace(/(.md|repl)$/, ''))}</strong>`;
     } else {
@@ -276,7 +281,7 @@ export async function saveEdit(title, content) {
         'Content-Type': 'text/plain',
         'Content-Length': content.length
     }
-    
+
     const res = await fetch('/api/fs/put', {
         method: "PUT",
         headers: myheaders,

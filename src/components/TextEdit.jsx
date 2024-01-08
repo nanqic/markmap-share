@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Link } from 'wouter';
 import { saveEdit, useDebounce } from '../utils'
 import { useNotification } from '../components/NotificationContext';
@@ -39,7 +39,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
     }
 
     return (
-        <div className='w-2/3 text-sm hidden md:block md:visible'>
+        <div className='w-2/3 text-sm hidden sm:block sm:visible'>
             <textarea ref={textRef} className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
                 onChange={handleChange}
                 onInput={() => setEditing(true)}

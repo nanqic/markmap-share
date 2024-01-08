@@ -29,7 +29,7 @@ const MarkmapHooks = React.memo((props) => {
         const mm = refMm.current;
         if (!mm) return;
         const { root } = transformer.transform(adaptLogseq(props.content));
-        initMarkmapOptions(mm, root)
+        props.showEdit ? initMarkmapOptions(mm, root, -1) : initMarkmapOptions(mm, root)
         mm.setData(root);
         mm.renderData();
         mm.fit();
