@@ -74,7 +74,8 @@ const MarkmapHooks = React.memo((props) => {
             case "space":
                 return mm.fit();
             case "F11":
-                handleFullScreenChange()
+                if (props.setShow)
+                    props.setShow(value => !value)
                 return mm.fit();
             default:
                 if (parseInt(key)) {
