@@ -7,6 +7,10 @@ li {
   list-style-type: none;
 }
 
+div {
+  overflow: hidden;
+}
+
 .mm-toolbar>.mm-toolbar-item,
 li,
 select,

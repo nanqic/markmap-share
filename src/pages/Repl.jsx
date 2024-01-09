@@ -30,14 +30,14 @@ export default function Repl() {
         return () => {
             window.removeEventListener('orientationchange', handleOrientationChange);
         };
-    }, [isVertical,content]);
+    }, [isVertical, content]);
 
     return (
         <div className="flex flex-row h-screen p-2">
             <WanrMsg show={isVertical} msg={'请关闭竖屏锁定，横屏以获得更好的体验'} />
             {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing} />}
             <div className="w-full flex">
-                {content && <MarkmapHooks content={content} setShowEdit={setShowEdit} showEdit={showEdit} editing={editing} />}
+                <MarkmapHooks content={content} setShowEdit={setShowEdit} showEdit={showEdit} editing={editing} />
             </div>
         </div>
     );
