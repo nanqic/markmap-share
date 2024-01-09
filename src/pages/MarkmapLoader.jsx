@@ -2,8 +2,8 @@ import { lazy, useEffect, useReducer, useState } from 'react'
 import { useParams } from 'wouter'
 import { filterFile, postRequest, textRequest } from '../utils'
 import Nav from '../components/Nav'
-import TextEdit from '../components/TextEdit'
 
+const TextEdit = lazy(() => import('../components/TextEdit'))
 const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 
 const MarkmapLoader = () => {
