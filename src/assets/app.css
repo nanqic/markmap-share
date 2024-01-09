@@ -3,12 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-li {
+details li {
   list-style-type: none;
-}
-
-div {
-  overflow: hidden;
 }
 
 .mm-toolbar>.mm-toolbar-item,

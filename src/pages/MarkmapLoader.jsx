@@ -93,7 +93,7 @@ const MarkmapLoader = () => {
   }
 
   return (
-    <div className='flex flex-row h-screen p-2'>
+    <div className='flex flex-row h-screen p-2 overflow-hidden'>
       <div className={show && !showEdit ? "absolute top-1 left-1" : 'hidden'}>
         <Nav state={state} setContent={setContent} setOpen={setOpen} />
       </div>
