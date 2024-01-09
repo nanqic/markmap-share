@@ -29,13 +29,13 @@ const FileTree = React.memo(
         {
           state.dirfiles?.sort((a, b) => a.name.split('-')[0] - b.name.split('-')[0]).map(dir => {
             return (
-              <details className='pl-3' key={dir.name} open={decodeURI(location.pathname).includes(dir.name) || open&&open[`${state.username}-${dir.name}`]} onToggle={e => handleToglle(e, dir.name)}>
+              <details className='pl-3 bg-white' key={dir.name} open={decodeURI(location.pathname).includes(dir.name) || open&&open[`${state.username}-${dir.name}`]} onToggle={e => handleToglle(e, dir.name)}>
                 <summary className='text-blue-500 folder'>
                   {dir.name}
                 </summary>
                 {dir.files?.sort(sortByFirstNum).map(file => {
                   { file }
-                  return <li key={file} className={decodeURI(location.pathname).includes(file) ? 'bg-red-50 px-2 inline-block' : ''}
+                  return <li key={file} className={decodeURI(location.pathname).includes(file) ? 'bg-slate-100 px-2 inline-block' : ''}
                     onClick={() => handleClickFile(`${dir.name}/${file}`)}>
                     {file}
                   </li>
@@ -48,7 +48,7 @@ const FileTree = React.memo(
         {
           state.dirs?.sort(sortByFirstNum).map(file => {
             return (
-              <li key={file} className={decodeURI(location.pathname).includes(file) ? 'bg-red-50 px-2' : ''} onClick={() => handleClickFile(file)}>
+              <li key={file} className={`bg-white ${decodeURI(location.pathname).includes(file) ? ' bg-slate-100 px-2' : ''}`} onClick={() => handleClickFile(file)}>
                 {file}
               </li>
             )

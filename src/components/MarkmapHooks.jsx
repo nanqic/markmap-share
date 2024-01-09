@@ -90,7 +90,7 @@ const MarkmapHooks = React.memo((props) => {
 
     return (
         <React.Fragment>
-            <div className={`w-full flex flex-col h-screen ${props.open && props.show ? 'pl-40' : ''}`}>
+            <div className={`w-full flex flex-col h-screen`}>
                 <svg className="flex-1" ref={refSvg} />
             </div>
             <div className="absolute bottom-1 left-1" ref={refToolbar}></div>
