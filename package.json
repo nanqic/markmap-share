@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@uiw/react-md-editor": "^4.0.3",
     "markmap-common": "^0.15.6",
     "markmap-lib": "^0.15.8",
     "markmap-toolbar": "^0.15.8",

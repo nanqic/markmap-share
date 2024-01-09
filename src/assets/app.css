@@ -31,6 +31,6 @@ summary {
 
 summary svg:hover,
 .folder:hover,
-li:hover {
+details li:hover {
   color: forestgreen;
 }
