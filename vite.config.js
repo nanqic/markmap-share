@@ -84,7 +84,8 @@ export default ({ mode }) => {
               'markmap-common',
               'markmap-toolbar',
               'markmap-lib',
-            ]
+            ],
+            mdEditor:['@uiw/react-md-editor']
           }
         }
       }

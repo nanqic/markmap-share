@@ -172,16 +172,6 @@ export const sortByFirstNum = (a, b) => {
     return parseInt(a.split('-')[0]) - parseInt(b.split('-')[0])
 }
 
-export function useDebounce(fn, wait) {
-    let timer = null
-    return (...args) => {
-        if (timer) {
-            clearTimeout(timer)
-        }
-        timer = setTimeout(() => fn(...args), wait)
-    }
-}
-
 export const transformer = new Transformer();
 
 export function renderToolbar(mm, wrapper) {

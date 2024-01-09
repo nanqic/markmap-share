@@ -5,9 +5,11 @@ const MarkmapHooks = lazy(() => import("@/components/MarkmapHooks"))
 const WanrMsg = lazy(() => import("@/components/WanrMsg"))
 
 export default function Repl() {
+    let cachedContent = localStorage.getItem("raw-content");
+
     const [editing, setEditing] = useState(false);
     const [showEdit, setShowEdit] = useState(true);
-    const [content, setContent] = useState();
+    const [content, setContent] = useState(cachedContent);
     const [isVertical, setIsVertical] = useState(screen.orientation?.type.includes("portrait"))
 
     const handleOrientationChange = () => {
@@ -15,12 +17,11 @@ export default function Repl() {
     }
 
     useEffect(() => {
-        let cachedContent = localStorage.getItem("raw-content");
         if (!cachedContent) {
             cachedContent = `# 学习\n\n## 学习方法\n- 主动学习\n- 高效学习\n- 深度学习\n\n## 学习计划\n- 设定目标\n- 制定计划\n- 实施反馈\n\n## 学习态度\n- 主动积极\n- 持续专注\n- 坚持不懈\n`
             localStorage.setItem("raw-content", cachedContent);
+            setContent(cachedContent)
         }
-        setContent(cachedContent)
 
         // 添加事件监听器
         window.addEventListener('orientationchange', handleOrientationChange);
@@ -29,7 +30,7 @@ export default function Repl() {
         return () => {
             window.removeEventListener('orientationchange', handleOrientationChange);
         };
-    }, [isVertical]);
+    }, [isVertical,content]);
 
     return (
         <div className="flex flex-row h-screen p-2">

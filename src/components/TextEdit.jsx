@@ -1,15 +1,27 @@
-import { useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'wouter';
-import { saveEdit, useDebounce } from '../utils'
+import { saveEdit } from '../utils'
 import { useNotification } from '../components/NotificationContext';
+import MDEditor from "@uiw/react-md-editor";
+import "@uiw/react-md-editor/markdown-editor.css";
 
 export default function TextEdit({ content, setContent, setEditing }) {
-    const textRef = useRef();
+    const [value, setValue] = useState(content || localStorage.getItem("raw-content"))
 
-    const handleChange = useDebounce(({ target: { value } }) => {
-        localStorage.setItem("raw-content", value);
-        setContent(value)
-    }, 700)
+    useEffect(() => {
+        // Use a separate useEffect to handle the debouncedValue change
+        const timer = setTimeout(() => {
+            if (value == '' || !value) {
+                localStorage.removeItem("raw-content")
+                setContent('value')
+            } else {
+                localStorage.setItem("raw-content", value)
+            }
+            setContent(value)
+        }, 700);
+
+        return () => clearTimeout(timer);
+    }, [value]);
 
     const showNotification = useNotification();
 
@@ -40,12 +52,16 @@ export default function TextEdit({ content, setContent, setEditing }) {
 
     return (
         <div className='w-2/3 text-sm hidden sm:block sm:visible'>
-            <textarea ref={textRef} className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
-                onChange={handleChange}
+
+            <MDEditor
+                height={500}
+                className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
+                preview="edit"
+                onChange={setValue}
                 onInput={() => setEditing(true)}
                 onBlur={() => setEditing(false)}
-                defaultValue={content || localStorage.getItem("raw-content")}
-            ></textarea>
+                value={value}
+            ></MDEditor>
 
             {localStorage.getItem("token") &&
                 <button className='float-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded' onClick={handleSave}>保存</button>
@@ -53,7 +69,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
             <Link href={`${import.meta.env.VITE_BASE_URL || '/'}`}
                 className={`float-end mr-4 mt-1.5 scale-150 ${location.pathname.endsWith('/repl') ? '' : 'hidden'}`}
             >🏠</Link>
-            <button className='float-end bg-red-500 mr-4 hover:bg-red-700 text-white font-bold py-1 px-2 rounded' onClick={() => textRef.current.value = ''}>清空</button>
+            <button className='float-end bg-red-500 mr-4 hover:bg-red-700 text-white font-bold py-1 px-2 rounded' onClick={() => setValue()}>清空</button>
             <button className={`float-end bg-amber-300 hover:bg-amber-600 mr-4 text-white font-bold py-1 px-2 rounded ${location.pathname.includes('/repl') ? 'hidden' : ''}`} onClick={boxEdit}>原编辑页</button>
         </div>
     )
