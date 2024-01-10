@@ -85,7 +85,7 @@ export default ({ mode }) => {
               'markmap-toolbar',
               'markmap-lib',
             ],
-            mdEditor:['@uiw/react-md-editor']
+            mdEditor: ['@uiw/react-md-editor/nohighlight']
           }
         }
       }
