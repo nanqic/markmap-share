@@ -129,18 +129,17 @@ export default function TextEdit({ content, setContent, setEditing }) {
         unorderedListCommand,
         orderedListCommand,
         divider,
-        help,
-        divider,
         clear,
+        divider,
+        help,
         divider,
         localStorage.getItem("token") && save,
     ];
 
     return (
-        <div className='w-2/3 text-sm hidden sm:block sm:visible'>
-
+        <div className='text-editor w-2/3 text-sm hidden sm:block sm:visible'>
             <MDEditor
-                height={500}
+                height="100%"
                 className="h-3/4 w-full p-2 border bg-gray-100 text-gray-700 rounded"
                 preview="edit"
                 onChange={setValue}

@@ -34,3 +34,7 @@ summary svg:hover,
 details li:hover {
   color: forestgreen;
 }
+
+.text-editor textarea {
+  line-height: 1.5;
+}

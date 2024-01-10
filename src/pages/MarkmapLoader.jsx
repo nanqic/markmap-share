@@ -77,7 +77,7 @@ const MarkmapLoader = () => {
     const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`;
     const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content;
     dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) });
-    const dirfiles = await Promise.all(dirsContent?.filter(file => file.is_dir)?.map(async dir => {
+    const dirfiles = dirsContent && await Promise.all(dirsContent?.filter(file => file.is_dir)?.map(async dir => {
       const resp = await postRequest(`${listUrl}/${user}/${dir.name}`);
       const files = resp?.data.content.filter(filterFile).map(item => item.name.slice(0, -3));
       return { name: dir.name, files };
