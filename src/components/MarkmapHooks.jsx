@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Markmap } from 'markmap-view';
 import { adaptLogseq, hideAll, showLevel, initMarkmapOptions, unfoldRecurs, foldRecurs, renderToolbar, transformer } from '../utils';
 import { useNotification } from './NotificationContext';
@@ -11,9 +11,12 @@ const MarkmapHooks = React.memo((props) => {
     // Ref for toolbar wrapper
     const refToolbar = useRef();
     const showNotification = useNotification();
-
+    const mobile = /Mobile/
+    const [mobileBar, setMobileBar] = useState(mobile.test(navigator.userAgent))
     const handleFullScreenChange = () => {
-        props.setShow(value => !value)
+        if (props.setShow)
+            props.setShow(value => !value)
+        mobile.test(navigator.userAgent) && setMobileBar(value => !value)
     };
     useEffect(() => {
         // Create markmap and save to refMm
@@ -37,9 +40,7 @@ const MarkmapHooks = React.memo((props) => {
         if (!props.editing) {
             document.addEventListener('keydown', handleKeyDown);
         }
-        if (props.setShow) {
-            document.addEventListener('fullscreenchange', handleFullScreenChange);
-        }
+        document.addEventListener('fullscreenchange', handleFullScreenChange);
 
         // 组件卸载时移除事件监听器
         return () => {
@@ -91,7 +92,7 @@ const MarkmapHooks = React.memo((props) => {
     return (
         <React.Fragment>
             <div className={`${props.showEdit && 'relative'} w-full flex flex-col h-screen`}>
-                <div className="absolute bottom-1 left-1" ref={refToolbar}></div>
+                <div className={`absolute  left-1 bottom-1 ${mobileBar && 'bottom-16'}`} ref={refToolbar}></div>
                 <svg className="flex-1" ref={refSvg} />
             </div>
         </React.Fragment>

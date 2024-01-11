@@ -136,6 +136,18 @@ export default function TextEdit({ content, setContent, setEditing }) {
         localStorage.getItem("token") && save,
     ];
 
+    const handleSaveKey = event => {
+        if (event.ctrlKey && event.key === 's')
+            handleSave()
+    }
+
+    document.addEventListener('keydown', function (event) {
+        // 检查是否按下了 Ctrl 键并且同时按下了 S 键
+        if (event.ctrlKey && event.key === 's') {
+            event.preventDefault(); // 阻止默认的保存行为
+        }
+    });
+
     return (
         <div className='text-editor w-2/3 text-sm hidden sm:block sm:visible'>
             <MDEditor
@@ -147,6 +159,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
                 onBlur={() => setEditing(false)}
                 value={value}
                 commands={getCommands}
+                onKeyDown={handleSaveKey}
             ></MDEditor>
         </div>
     )

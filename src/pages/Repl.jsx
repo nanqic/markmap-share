@@ -33,7 +33,7 @@ export default function Repl() {
     }, [isVertical, content]);
 
     return (
-        <div className="flex flex-row h-screen p-2">
+        <div className="flex flex-row h-screen">
             <WanrMsg show={isVertical} msg={'请关闭竖屏锁定，横屏以获得更好的体验'} />
             {showEdit && <TextEdit content={content} setContent={setContent} setEditing={setEditing} />}
             <div className="w-full flex">

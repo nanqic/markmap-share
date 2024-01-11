@@ -228,8 +228,11 @@ export function renderToolbar(mm, wrapper) {
     }
 }
 
-const getToken = () => {
-    if (!localStorage.getItem("token")) alert('请先登录box网盘, 再回到本页操作');
+export const getToken = () => {
+    if (!localStorage.getItem("token")){
+        console.error('请先登录box网盘, 再回到本页操作');
+        return null
+    }
     return localStorage.getItem("token")
 }
 
@@ -246,6 +249,10 @@ export async function getUserPath() {
         }
     }).catch(err => console.error(err))
     const json = await res.json()
+    if (json.message != 'success') {
+        localStorage.removeItem("token")
+        return 'err'
+    }
 
     let path = json.data.base_path
 
