@@ -42,6 +42,7 @@ export default ({ mode }) => {
       }
     },
     server: {
+      host: "0.0.0.0",
       // 是否自动在浏览器打开
       open: false,
       // 是否开启 https
