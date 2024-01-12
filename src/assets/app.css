@@ -3,12 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-details li {
-  list-style-type: none;
-}
-
 .mm-toolbar>.mm-toolbar-item,
-li,
+div>p,
+details>p,
 select,
 summary {
   cursor: pointer;
@@ -31,8 +28,20 @@ summary {
 
 summary svg:hover,
 .folder:hover,
-details li:hover {
+details p:hover {
   color: forestgreen;
+}
+
+details>p,
+div>p {
+  max-width: 160px;
+  /* 设置最大宽度为300像素，可以根据需要调整 */
+  overflow: hidden;
+  /* 如果文字超过最大宽度，隐藏溢出部分 */
+  white-space: nowrap;
+  /* 防止文字换行 */
+  text-overflow: ellipsis;
+  /* 如果文字超过最大宽度，显示省略号 */
 }
 
 .text-editor textarea {

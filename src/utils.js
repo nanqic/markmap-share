@@ -122,29 +122,40 @@ export function toggleFullScreen() {
     }
 }
 
-export async function copyTextToClipboard(text) {
-    if ('clipboard' in navigator) {
-        return await navigator.clipboard.writeText(text);
-    } else {
-        return document.execCommand('copy', true, text);
+export async function copyTextToClipboard(text, retries = 3) {
+    try {
+        if ('clipboard' in navigator) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            document.execCommand('copy', true, text);
+        }
+        console.log('Text copied to clipboard successfully.');
+    } catch (error) {
+        console.error('Error copying text to clipboard:', error);
+
+        if (retries > 0) {
+            console.log(`Retrying (${retries} retries left)...`);
+            await copyTextToClipboard(text, retries - 1);
+        } else {
+            console.error('Max retries reached. Unable to copy text to clipboard.');
+        }
     }
 }
 
-export const copyLink = () => {
+export const copyLink = async () => {
     let rawUrl = location.href
-    fetch(`${import.meta.env.VITE_YOURLS_API}${rawUrl}`)
-        .then((resp) => resp.json())
-        .then((json) => {
-            if (json.statusCode == 200 || json.statusCode == 400) {
-                rawUrl = json.shorturl
-            }
-        })
-        .catch((err) => {
-            console.error('YOURLS_API err', err)
-        })
-        .finally(() => {
-            copyTextToClipboard(rawUrl)
-        })
+    try {
+        const resp = await fetch(`${import.meta.env.VITE_YOURLS_API}${rawUrl}`);
+        const json = await resp.json();
+
+        if (json.statusCode == 200 || json.statusCode == 400) {
+            rawUrl = json.shorturl;
+        }
+    } catch (err) {
+        console.error('YOURLS_API err', err);
+    } finally {
+        await copyTextToClipboard(rawUrl);
+    }
 }
 
 export const downloadHtml = (htmlContent) => {
@@ -229,8 +240,8 @@ export function renderToolbar(mm, wrapper) {
 }
 
 export const getToken = () => {
-    if (!localStorage.getItem("token")){
-        console.error('请先登录box网盘, 再回到本页操作');
+    if (!localStorage.getItem("token")) {
+        // console.error('请先登录box网盘, 再回到本页操作');
         return null
     }
     return localStorage.getItem("token")
