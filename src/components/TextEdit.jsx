@@ -11,13 +11,11 @@ MDEditor,
     italic,
     strikethrough,
     title1, title2, title3, title4, title5, title6,
-    quote,
     code,
-    codeBlock,
-    divider,
     unorderedListCommand,
     orderedListCommand,
     help,
+    divider,
 } from '@uiw/react-md-editor/nohighlight';
 
 
@@ -28,8 +26,8 @@ export default function TextEdit({ content, setContent, setEditing }) {
         // Use a separate useEffect to handle the debouncedValue change
         const timer = setTimeout(() => {
             if (value == '' || !value) {
-                localStorage.removeItem("raw-content")
-                setContent('value')
+                // localStorage.removeItem("raw-content")
+                setContent()
             } else {
                 localStorage.setItem("raw-content", value)
             }
@@ -54,6 +52,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
         if (userInput === null || userInput.trim() === "") {
             return;
         }
+        title = userInput
 
         res = await saveEdit(title, content)
         if (res == 'success') {
@@ -96,7 +95,6 @@ export default function TextEdit({ content, setContent, setEditing }) {
             </svg>
         ),
         execute: () => window.open(`${import.meta.env.VITE_SERVER_URL}/markmap${location.pathname.replace("/@markmap", "")}`)
-
     }
 
     const clear = {
@@ -122,28 +120,23 @@ export default function TextEdit({ content, setContent, setEditing }) {
             groupName: 'title',
             buttonProps: { 'aria-label': 'Insert title', title: 'Insert title' },
         }),
-        quote,
-        code,
-        codeBlock,
-        divider,
         unorderedListCommand,
         orderedListCommand,
-        divider,
+        code,
         clear,
-        divider,
-        help,
+        { ...help, execute: () => window.open('https://box.hdcxb.net/markmap', '_blank') },
         divider,
         localStorage.getItem("token") && save,
     ];
 
     const handleSaveKey = event => {
-        if (event.ctrlKey && event.key === 's')
-            handleSave()
+        if (event.ctrlKey && event.key === 's') { handleSave() }
+        else if (event.ctrlKey && event.key === 'l') { setValue() }
     }
 
     document.addEventListener('keydown', function (event) {
         // 检查是否按下了 Ctrl 键并且同时按下了 S 键
-        if (event.ctrlKey && event.key === 's') {
+        if (event.ctrlKey && event.key === 's' || event.key === 'l') {
             event.preventDefault(); // 阻止默认的保存行为
         }
     });
