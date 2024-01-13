@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <Switch>
         <Route path={`${import.meta.env.VITE_BASE_URL}/repl`} component={Repl} />
-        <Route path={`${import.meta.env.VITE_BASE_URL}/:username?/:dir?/:filename?`} component={MarkmapLoader} />
+        <Route path={`${import.meta.env.VITE_BASE_URL}/:foldername?/:dir?/:filename?`} component={MarkmapLoader} />
       </Switch>
     </>
   )

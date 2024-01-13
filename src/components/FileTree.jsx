@@ -17,12 +17,12 @@ const FileTree = React.memo(
 
 
     const handleClickFile = useCallback((file) => {
-      setLocation(`${import.meta.env.VITE_BASE_URL}/${state.username || state.userlist.shift()}/${file}.md`)
+      setLocation(`${import.meta.env.VITE_BASE_URL}/${state.foldername || state.userlist.shift()}/${file}.md`)
     }, [state])
 
     const handleToglle = ({ target: { open } }, name) => {
       let dir_opened = JSON.parse(localStorage.getItem("dir_open"))
-      localStorage.setItem("dir_open", JSON.stringify({ ...dir_opened, [`${state.username}-${name}`]: open }))
+      localStorage.setItem("dir_open", JSON.stringify({ ...dir_opened, [`${state.foldername}-${name}`]: open }))
     }
     return (
       <div className='text-gray-600 px-1.5 group inline-block bg-white'>
@@ -38,7 +38,7 @@ const FileTree = React.memo(
         {
           state.dirfiles?.sort((a, b) => a.name.split('-')[0] - b.name.split('-')[0]).map(dir => {
             return (
-              <details key={dir.name} open={decodeURI(location.pathname).includes(dir.name) || open && open[`${state.username}-${dir.name}`]} onToggle={e => handleToglle(e, dir.name)}>
+              <details key={dir.name} open={decodeURI(location.pathname).includes(dir.name) || open && open[`${state.foldername}-${dir.name}`]} onToggle={e => handleToglle(e, dir.name)}>
                 <summary className='text-blue-500 folder'>
                   {dir.name}
                 </summary>

@@ -19,9 +19,9 @@ const MarkmapLoader = () => {
     switch (action.type) {
       case 'SET_USERLIST':
         return { ...state, userlist: action.payload };
-      case 'SET_USERNAME':
-        localStorage.setItem("username", action.payload)
-        return { ...state, username: action.payload };
+      case 'SET_FOLDERNAME':
+        localStorage.setItem("foldername", action.payload)
+        return { ...state, foldername: action.payload };
       case 'SET_DIRS':
         return { ...state, dirs: action.payload };
       case 'SET_DIRFILES':
@@ -33,7 +33,7 @@ const MarkmapLoader = () => {
 
   const initialState = {
     userlist: undefined,
-    username: localStorage.getItem("username"),
+    foldername: localStorage.getItem("foldername"),
     dirs: null,
     dirfiles: null,
   };
@@ -45,10 +45,10 @@ const MarkmapLoader = () => {
   }, [])
 
   useEffect(() => {
-    let username = decodeURI(params.username)
-    if (username != ('undefined' || state.username)) {
-      dispatch({ type: 'SET_USERNAME', payload: username })
-      loadUserFiles(username)
+    let foldername = decodeURI(params.foldername)
+    if (foldername != ('undefined' || state.foldername)) {
+      dispatch({ type: 'SET_FOLDERNAME', payload: foldername })
+      loadUserFiles(foldername)
     }
 
     if (params.dir?.slice(-3) == '.md') {
@@ -65,11 +65,11 @@ const MarkmapLoader = () => {
     const userArr = data.map(item => item.name)
     dispatch({ type: 'SET_USERLIST', payload: userArr });
 
-    let defaultUser = params.username ? decodeURI(params.username) : state.username;
-    if (!params.username && !state.username) {
+    let defaultUser = params.foldername ? decodeURI(params.foldername) : state.foldername;
+    if (!params.foldername && !state.foldername) {
       defaultUser = userArr[0]
     }
-    dispatch({ type: 'SET_USERNAME', payload: defaultUser })
+    dispatch({ type: 'SET_FOLDERNAME', payload: defaultUser })
     loadUserFiles(defaultUser)
   }
 
@@ -87,7 +87,7 @@ const MarkmapLoader = () => {
   }
 
   const loadText = async (filename) => {
-    const fileUrl = `${import.meta.env.VITE_SERVER_URL}/p/markmap/${params.username}/${filename}`
+    const fileUrl = `${import.meta.env.VITE_SERVER_URL}/p/markmap/${params.foldername}/${filename}`
     let resp = await textRequest(fileUrl)
     setContent(resp)
   }

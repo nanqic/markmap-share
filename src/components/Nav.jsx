@@ -42,7 +42,7 @@ export default function
                         </svg>
                     </span>
                     <Link title='主页' href={`${import.meta.env.VITE_BASE_URL || '/'}`} onClick={() => setContent()}> 🏠</Link>
-                    {state.username && <select onChange={handleChangeUser} value={state.username}>
+                    {state.foldername && <select onChange={handleChangeUser} value={state.foldername}>
                         {
                             state.userlist?.map(user => {
                                 return <option key={user} value={user}>{user}</option>
