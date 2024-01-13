@@ -40,21 +40,23 @@ export default function TextEdit({ content, setContent, setEditing }) {
     const showNotification = useNotification();
 
     const handleSave = async () => {
-        let title = decodeURI(location.pathname.replace(import.meta.env.VITE_BASE_URL, '').slice(0, -3))
-        let res;
+        let title, res, userInput;
 
         if (location.pathname.endsWith('/repl')) {
             const re = /(?<=(#|-) )\S{1,32}/
             title = content.match(re).shift()
+            userInput = window.prompt("确认保存", `${title}`)
+        } else {
+            title = decodeURI(location.pathname.replace(import.meta.env.VITE_BASE_URL, '').slice(0, -3))
+            userInput = window.prompt("确认保存('/'中间为目录)", `${title}`)
+
         }
 
-        let userInput = window.prompt('确认保存', `${title.split('/').pop()}`)
         if (userInput === null || userInput.trim() === "") {
             return;
         }
-        title = userInput
 
-        res = await saveEdit(title, content)
+        res = await saveEdit(userInput, content)
         if (res == 'success') {
             return showNotification({ msg: '保存成功！' })
         }

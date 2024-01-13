@@ -280,11 +280,11 @@ export async function saveEdit(title, content) {
     if (title.indexOf('/') == -1) {
         userPath = await getUserPath() + '/'
     }
-    const filPath = `${import.meta.env.VITE_SERVER_PATH}${userPath}${title}.md`
+    const filePath = `${import.meta.env.VITE_SERVER_PATH}${userPath}${title}.md`
 
     const myheaders = {
         Authorization: token,
-        'File-Path': encodeURI(filPath),
+        'File-Path': encodeURI(filePath),
         'Content-Type': 'text/plain',
         'Content-Length': content.length
     }
