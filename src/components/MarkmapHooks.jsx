@@ -57,10 +57,12 @@ const MarkmapHooks = React.memo((props) => {
         switch (key) {
             case ",":
                 unfoldRecurs(mm.state.data);
-                break;
+                mm.renderData();
+                return mm.fit();
             case ".":
                 foldRecurs(mm.state.data);
-                break;
+                mm.renderData();
+                return mm.fit();
             case "=":
             case "+":
                 return mm.rescale(1.25);
@@ -69,8 +71,7 @@ const MarkmapHooks = React.memo((props) => {
                 return mm.rescale(0.8);
 
             case 'm':
-                hideAll(mm);
-                break;
+                return hideAll(mm);
             case "0":
             case "space":
                 return mm.fit();
@@ -82,11 +83,12 @@ const MarkmapHooks = React.memo((props) => {
                 if (parseInt(key)) {
                     foldRecurs(mm.state.data);
                     showLevel(mm.state.data, parseInt(key));
+                    mm.renderData();
+                    mm.fit();
                 }
         }
 
-        mm.renderData();
-        mm.fit();
+
     }
 
     return (

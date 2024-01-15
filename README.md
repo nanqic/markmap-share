@@ -80,3 +80,4 @@ server {
 - wouter
 - tailwindcss
 - YOURLS
+- @uiw/react-md-editor
