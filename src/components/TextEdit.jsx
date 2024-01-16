@@ -76,6 +76,24 @@ export default function TextEdit({ content, setContent, setEditing }) {
         execute: handleSave
     }
 
+    const br = {
+        name: "br",
+        keyCommand: "e",
+        buttonProps: { "title": "new line" },
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h9a2.5 2.5 0 0 1 0 5h-1.293l.647.646a.5.5 0 0 1-.708.708l-1.5-1.5a.5.5 0 0 1 0-.708l1.5-1.5a.5.5 0 0 1 .708.708l-.647.646H11.5a1.5 1.5 0 0 0 0-3h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5" />
+            </svg>
+        ),
+        execute: (state, api) => {
+            let modifyText = `<br/> ${state.selectedText}<br/>`;
+            if (!state.selectedText) {
+                modifyText = `<br/> `;
+            }
+            api.replaceSelection(modifyText);
+        },
+    }
+
     const home = {
         name: "home",
         keyCommand: "l",
@@ -125,6 +143,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
         unorderedListCommand,
         orderedListCommand,
         code,
+        br,
         clear,
         { ...help, execute: () => window.open('https://box.hdcxb.net/markmap', '_blank') },
         divider,
