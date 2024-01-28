@@ -105,7 +105,7 @@ export const initMarkmapOptions = (mm, root, level) => {
     }
 
     if (!root.content) {
-        root.content = `<strong>${decodeURI(location.pathname.split('/').pop().replace(/(.md|repl)$/, ''))}</strong>`;
+        root.content = `<strong>${decodeURI(location.pathname.split('/').pop().replace(/(.md|repl|new)$/, ''))}</strong>`;
     } else {
         root.content = `<strong>${root.content}</strong>`;
 

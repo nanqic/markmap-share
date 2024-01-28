@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useLocation } from 'wouter';
+import { useLocation, useSearch } from 'wouter';
 import { saveEdit } from '../utils'
 import { useNotification } from '../components/NotificationContext';
 import "@uiw/react-md-editor/markdown-editor.css";
@@ -22,6 +22,7 @@ MDEditor,
 export default function TextEdit({ content, setContent, setEditing }) {
     const [value, setValue] = useState(content || localStorage.getItem("raw-content"))
     const [, setLocation] = useLocation()
+    const searchString = useSearch()
     useEffect(() => {
         // Use a separate useEffect to handle the debouncedValue change
         const timer = setTimeout(() => {
@@ -41,15 +42,17 @@ export default function TextEdit({ content, setContent, setEditing }) {
 
     const handleSave = async () => {
         let title, res, userInput;
+        const re = /(?<=(#|-) )\S{1,32}/
+        title = content.match(re).shift()
 
         if (location.pathname.endsWith('/repl')) {
-            const re = /(?<=(#|-) )\S{1,32}/
-            title = content.match(re).shift()
             userInput = window.prompt("确认保存", `${title}`)
+        } else if (location.pathname.endsWith('/new')) {
+            title = decodeURI(location.pathname.replace(import.meta.env.VITE_BASE_URL, '').slice(0, -4)) + searchString.slice(5) + title
+            userInput = window.prompt("确认保存('/'前为保存路径)", `${title}`)
         } else {
             title = decodeURI(location.pathname.replace(import.meta.env.VITE_BASE_URL, '').slice(0, -3))
-            userInput = window.prompt("确认保存('/'中间为目录)", `${title}`)
-
+            userInput = window.prompt("确认保存('/'前为保存路径)", `${title}`)
         }
 
         if (userInput === null || userInput.trim() === "") {
@@ -82,7 +85,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
         buttonProps: { "title": "new line" },
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h9a2.5 2.5 0 0 1 0 5h-1.293l.647.646a.5.5 0 0 1-.708.708l-1.5-1.5a.5.5 0 0 1 0-.708l1.5-1.5a.5.5 0 0 1 .708.708l-.647.646H11.5a1.5 1.5 0 0 0 0-3h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5" />
+                <path fillRule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h9a2.5 2.5 0 0 1 0 5h-1.293l.647.646a.5.5 0 0 1-.708.708l-1.5-1.5a.5.5 0 0 1 0-.708l1.5-1.5a.5.5 0 0 1 .708.708l-.647.646H11.5a1.5 1.5 0 0 0 0-3h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5" />
             </svg>
         ),
         execute: (state, api) => {
