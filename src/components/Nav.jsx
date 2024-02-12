@@ -12,7 +12,6 @@ export default function
     const params = useParams();
 
     useEffect(() => {
-        console.log(!params.dir || params.dir?.endsWith('.md'), params.foldername);
         if (localStorage.getItem("theme")) {
             import(`assets/theme-wheat.css`)
             setTheme('wheat')

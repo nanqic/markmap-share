@@ -43,7 +43,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
     const handleSave = async () => {
         let title, res, userInput;
         const re = /(?<=(#|-) )\S{1,32}/
-        title = content.match(re).shift()
+        title = content.match(re)?.shift()
 
         if (location.pathname.endsWith('/repl')) {
             userInput = window.prompt("确认保存", `${title}`)
@@ -117,7 +117,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
                 <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8m0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5" />
             </svg>
         ),
-        execute: () => window.open(`${import.meta.env.VITE_SERVER_URL}/markmap${location.pathname.replace("/@markmap", "")}`)
+        execute: () => window.open(`${import.meta.env.VITE_SERVER_URL}${import.meta.env.VITE_SERVER_PATH}${location.pathname.replace("/@markmap", "")}`)
     }
 
     const clear = {
@@ -148,7 +148,7 @@ export default function TextEdit({ content, setContent, setEditing }) {
         code,
         br,
         clear,
-        { ...help, execute: () => window.open('https://box.hdcxb.net/markmap', '_blank') },
+        { ...help, execute: () => window.open(`https://box.hdcxb.net${import.meta.env.VITE_SERVER_PATH}`, '_blank') },
         divider,
         localStorage.getItem("token") && save,
     ];

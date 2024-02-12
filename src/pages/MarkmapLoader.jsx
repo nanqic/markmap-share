@@ -60,7 +60,7 @@ const MarkmapLoader = () => {
   }, [params])
 
   const loadUsers = async () => {
-    const dirsUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/dirs?path=markmap`
+    const dirsUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/dirs?path=${import.meta.env.VITE_SERVER_PATH}`
     const { data } = await postRequest(dirsUrl)
     const userArr = data.map(item => item.name)
     dispatch({ type: 'SET_USERLIST', payload: userArr });
@@ -74,7 +74,7 @@ const MarkmapLoader = () => {
   }
 
   async function loadUserFiles(user) {
-    const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=markmap`;
+    const listUrl = `${import.meta.env.VITE_SERVER_URL}/api/fs/list?path=${import.meta.env.VITE_SERVER_PATH}`;
     const dirsContent = (await postRequest(`${listUrl}/${user}`))?.data.content;
     dispatch({ type: 'SET_DIRS', payload: dirsContent?.filter(filterFile).map(x => x.name.slice(0, -3)) });
     const dirfiles = dirsContent && await Promise.all(dirsContent?.filter(file => file.is_dir)?.map(async dir => {
@@ -87,7 +87,7 @@ const MarkmapLoader = () => {
   }
 
   const loadText = async (filename) => {
-    const fileUrl = `${import.meta.env.VITE_SERVER_URL}/p/markmap/${params.foldername}/${filename}`
+    const fileUrl = `${import.meta.env.VITE_SERVER_URL}/p${import.meta.env.VITE_SERVER_PATH}/${params.foldername}/${filename}`
     let resp = await textRequest(fileUrl)
     setContent(resp)
   }
