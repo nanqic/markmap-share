@@ -1,1 +1,5 @@
+<<<<<<< HEAD
+=======
+.gitattributes merge=ours
+>>>>>>> code
 .env merge=ours
