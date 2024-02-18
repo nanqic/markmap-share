@@ -71,11 +71,13 @@ const VideoPlayer = () => {
             <ul className="mx-5 my-2 subtitles-box overflow-y-scroll h-80">
                 {subtitles.map((subtitle, index) => (
                     <li
+                        onClick={()=>videoRef.current.currentTime = parseTime(subtitle.startTime)}
                         key={index}
                         id={`subtitle-${index}`}
-                        className={`subtitle-line ${index === currentSubtitleIndex && 'highlight'}`}
+                        className={`subtitle-line cursor-pointer`}
                     >
-                        {subtitle.text}
+                        <span className='p-1 font-thin text-xs'>{subtitle.startTime.split(',')[0]}</span>
+                        <span className={`hover:text-blue-400 ${index === currentSubtitleIndex && 'text-blue-400 text-lg'}`}>{subtitle.text}</span>
                     </li>
                 ))}
             </ul>
