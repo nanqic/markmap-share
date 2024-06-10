@@ -1,9 +1,9 @@
-[![deploy](https://github.com/nanqic/markmap-share/actions/workflows/deploy.yml/badge.svg)](https://github.com/nanqic/markmap-share/actions/workflows/deploy.yml)
+<!-- [![deploy](https://github.com/nanqic/markmap-share/actions/workflows/deploy.yml/badge.svg)](https://github.com/nanqic/markmap-share/actions/workflows/deploy.yml) -->
 
 # Markmap Share
 
 ## 演示站点
-https://mshare.pages.dev
+https://mmap.ningway.com
 
 ## 运行 nodejs >=18
 - `npm install`
