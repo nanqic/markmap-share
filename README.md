@@ -1,9 +1,4 @@
-<!-- [![deploy](https://github.com/nanqic/markmap-share/actions/workflows/deploy.yml/badge.svg)](https://github.com/nanqic/markmap-share/actions/workflows/deploy.yml) -->
-
 # Markmap Share
-
-## 演示站点
-https://mmap.ningway.com
 
 ## 运行 nodejs >=18
 - `npm install`
@@ -36,7 +31,7 @@ https://mmap.ningway.com
 
 ## caddy配置
 ``` Caddyfile
-box.hdcxb.net {
+domain {
         encode gzip zstd
 
         handle_path /@markmap* {
